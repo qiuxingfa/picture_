@@ -105,10 +105,10 @@ KDD2018于本月19-23日在伦敦举行，收录了近300篇论文<br>
 >Jeannette M. Wing - Data for Good<br>
 >数据科学的良性发展<br>
 
-* Acemap团队对2018年KDD所有论文进行了分析<br
+* Acemap团队对2018年KDD所有论文进行了分析<br>
 [KDD](https://acemap.info/KDD/MainPage#sessionCommerce%20and%20Profiling)<br>
 包括[机构统计](https://acemap.info/KDD/AffiliationStatistics),[作者统计](https://acemap.info/KDD/AuthorStatistics),[作者关系图](https://acemap.info/app/KDD/AuthorMap2018.php),[论文解读](https://acemap.info/KDD/MainPage#sessionCommerce%20and%20Profiling),[Session关系图](https://acemap.info/KDD/RecommendationMap)等
 
-##下周计划
+## 下周计划
 * 继续对命名实体识别和知识抽取做相关调研
 * 学习斯坦福CS224n自然语言处理课程
