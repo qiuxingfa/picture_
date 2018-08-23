@@ -56,9 +56,10 @@
 3. 将各类模型、算法结合起来，将前一级模型的结果作为下一级的训练数据，并用这些训练数据对模型进行训练，得到下一级模型。
 #### 监督学习
 目前解决命名实体识别问题的`主导技术`就是监督式学习,这项技术包括Hidden Markov Models，Decision Trees, Maximun Entropy Models, Support Vector Machines 和Conditional Random Fields,他们都需要一个庞大的注释语料库，储存大量实体列表并根据那些具有区分能力的特征实际各种用于消除歧义的规则。<br>
-`有监督学习方法`基于大量标注语料，定义一系列实体，通过学习得到基于特征的判别规则<br>
-`半监督学习方法`只提供很少的标注数据，例如一些种子用于开始的学习<br>
-`无监督方法`通过相似的上下文将不同的命名实体聚到一起<br>
+
+* `有监督学习方法`基于大量标注语料，定义一系列实体，通过学习得到基于特征的判别规则<br>
+* `半监督学习方法`只提供很少的标注数据，例如一些种子用于开始的学习<br>
+* `无监督方法`通过相似的上下文将不同的命名实体聚到一起<br>
 
 ### 评价指标
 * 正确率 = 识别出的正确实体数 / 识别出的实体数
@@ -66,7 +67,7 @@
 * F1值 = （2 * 正确率 * 召回率）/（正确率 + 召回率）
 
 ## 使用BiLSTM-CRF模型的中文命名实体识别项目
-其目标是识别三种类型的命名实体：PERSON，LOCATION和ORGANIZATION。
+其目标是识别三种类型的命名实体：`PERSON`，`LOCATION`和`ORGANIZATION`。
 ![](https://github.com/Determined22/zh-NER-TF/blob/master/pics/pic1.png)
 
 * 模型的第一层是look-up层，利用预训练或随机初始化的embedding矩阵将句子中的每个字x_i由one-hot向量映射为低维稠密的字向量
@@ -87,3 +88,27 @@
 ![](https://github.com/qiuxingfa/picture_/blob/master/2018.8.23/5b0bfd3d1ee3b2d9360e91a3ff7cd86.png)
 
 ## KDD会议相关
+KDD(Knowledge Discovery and Data mining)<br>
+知识发现与数据挖掘<br>
+KDD2018于本月19-23日在伦敦举行，收录了近300篇论文<br>
+
+* 包括`图挖掘算法`，`隐私保护`，`医疗健康AI`，`出行零售人工智能`等等研究前沿内容
+
+* 有27个workshop，涉及`数据挖掘`，`物联网`，``城市数据处理`，`社会组织行为`，`生物以及量子计算`等议题
+* 有4场演讲
+>David Hand - Data Science for Financial Applications<br>
+>数据与金融应用<br>
+>Alvin E. Roth - Market Design and Computerized Marketplaces<br>
+>市场设计和计算市场<br>
+>Yee Whye Teh - On Big Data Learning for Small Data Problems<br>
+>用于小数据问题的大数据问题<br>
+>Jeannette M. Wing - Data for Good<br>
+>数据科学的良性发展<br>
+
+* Acemap团队对2018年KDD所有论文进行了分析<br
+[KDD](https://acemap.info/KDD/MainPage#sessionCommerce%20and%20Profiling)<br>
+包括[机构统计](https://acemap.info/KDD/AffiliationStatistics),[作者统计](https://acemap.info/KDD/AuthorStatistics),[作者关系图](https://acemap.info/app/KDD/AuthorMap2018.php),[论文解读](https://acemap.info/KDD/MainPage#sessionCommerce%20and%20Profiling),[Session关系图](https://acemap.info/KDD/RecommendationMap)等
+
+##下周计划
+* 继续对命名实体识别和知识抽取做相关调研
+* 学习斯坦福CS224n自然语言处理课程
