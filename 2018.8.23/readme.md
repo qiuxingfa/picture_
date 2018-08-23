@@ -1,1 +1,1 @@
-![]（https://github.com/Determined22/zh-NER-TF/raw/master/pics/pic1.png）
+![]（https://github.com/Determined22/zh-NER-TF/blob/master/pics/pic1.png）
