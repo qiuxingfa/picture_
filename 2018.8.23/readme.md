@@ -1,1 +1,1 @@
-![]（https://github.com/Determined22/zh-NER-TF/blob/master/pics/pic1.png)
+![535d672a034fbc32e9635a091e30ab6]（./535d672a034fbc32e9635a091e30ab6.png)
