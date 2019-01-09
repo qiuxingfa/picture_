@@ -1,4 +1,4 @@
-﻿# GLUE
+# GLUE
 
 ---
 
@@ -19,10 +19,11 @@
 **类别**：0和1<br>
 **评估**：Matthews correlation coefficient（马修斯相关系数）<br>
 **示例**：<br>
-|source| lable|the acceptability judgment as originally notated by the author|a sequence of words |
-|:---:|---:|---:|---:|
-| gj04| 1||Our friends won't buy this analysis, let alone the next one we propose.|
-|gj04|	0	|*	|They drank the pub.|
+
+|  source  | lable | the acceptability judgment as originally notated by the author | a sequence of words |
+| :----: | :---: | :---: | :---: |
+| gj04  | 1 |  | Our friends won't buy this analysis, let alone the next one we propose. | 
+| gj04   | 0  | *  | They drank the pub.  | 
 
 2. [SST-2](https://nlp.stanford.edu/sentiment/index.html)（The Stanford Sentiment Treebank）[data](https://firebasestorage.googleapis.com/v0/b/mtl-sentence-representations.appspot.com/o/data%2FSST-2.zip?alt=media&token=aabc5f6b-e466-44a2-b9b4-cf6337f84ac8) <br>
 **T/D/V**：67k/872/1.8k<br>
@@ -31,6 +32,7 @@
 **类别**：1和0 (positive/negative)<br>
 **评估**：accuracy<br>
 **示例**：<br>
+
 |sentence|	label|
 |:---:|---:|
 |contains no wit , only labored gags | 	0|
@@ -43,6 +45,7 @@
 **类别**：1和0<br>
 **评估**：accuracy and F1 score<br>
 **示例**：<br>
+
 |Quality|#1 ID|#2 ID|#1 String|#2 String|
 |:---:|---:|---:|---:|---:|
 |1 | 702876|702977|Amrozi accused his brother , whom he called " the witness " , of deliberately distorting his evidence .| 	Referring to him as only " the witness " , Amrozi accused his brother of deliberately distorting his evidence .|
@@ -55,6 +58,7 @@
 **类别**：1和0 <br>
 **评估**：accuracy and F1<br>
 **示例**：<br>
+
 |id|qid1|qid2|question1|question2|is_duplicate|
 |:---:|---:|---:|---:|---:|---:|
 |133273 | 213221|213222|How is the life of a math student?Could you describe your own experiences?|Could you describe your own experiences?|0|
@@ -67,6 +71,7 @@
 **类别**：相似度分数1-5 <br>
 **评估**：Pearson and Spearman correlation coefficients（相关系数）<br>
 **示例**：<br>
+
 |index|	genre|	filename|	year|	old_index|	source1|	source2|	sentence1|	sentence2|	score|
 |:---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 |0|	main-captions|	MSRvid|	2012test|	|0001|	none|	none|	A plane is taking off.|	An air plane is taking off.|5.000|
@@ -79,6 +84,7 @@
 **类别**：entails，contradicts，neutral <br>
 **评估**：matched (in-domain) and mismatched (cross-domain) accuracy<br>
 **示例**：<br>
+
 |index|	promptID|	pairID|	genre|	sentence1_binary_parse|	sentence2_binary_parse	| sentence1_parse|sentence2_parse|	sentence1|	sentence2|	label1|	gold_label|
 |:---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 |0	|31193|	31193n|	government|( ( Conceptually ( cream skimming ) ) ( ( has ( ( ( two ( basic dimensions ) ) - ) ( ( product and ) geography ) ) ) . ) )|( ( ( Product and ) geography ) ( ( are ( what ( make ( cream ( skimming work ) ) ) ) ) . ) )|(ROOT (S (NP (JJ Conceptually) (NN cream) (NN skimming)) (VP (VBZ has) (NP (NP (CD two) (JJ basic) (NNS dimensions)) (: -) (NP (NN product) (CC and) (NN geography)))) (. .)))|(ROOT (S (NP (NN Product) (CC and) (NN geography)) (VP (VBP are) (SBAR (WHNP (WP what)) (S (VP (VBP make) (NP (NP (NN cream)) (VP (VBG skimming) (NP (NN work)))))))) (. .)))|Conceptually cream skimming has two basic dimensions - product and geography.|Product and geography are what make cream skimming work. |neutral|neutral|
@@ -91,6 +97,7 @@
 **类别**：entailment，not_entailment<br>
 **评估**：accuracy<br>
 **示例**：<br>
+
 |index|	question|	sentence|	label|
 |:---:|---:|---:|---:|
 |0	|What is the Grotto at Notre Dame?|	Immediately behind the basilica is the Grotto, a Marian place of prayer and reflection.|	entailment|
@@ -102,6 +109,7 @@
 **类别**：entailment，not_entailment<br>
 **评估**：accuracy<br>
 **示例**：<br>
+
 |index|	sentence1|	sentence2|	label|
 |:---:|---:|---:|---:|
 |0|	No Weapons of Mass Destruction Found in Iraq Yet.|	Weapons of Mass Destruction Found in Iraq.|	not_entailment|
@@ -113,11 +121,13 @@
 **类别**：0和1<br>
 **评估**：accuracy<br>
 **示例**：<br>
+
 |index|	sentence1|	sentence2|	label|
 |:---:|---:|---:|---:|
 |0	|I stuck a pin through a carrot. When I pulled the pin out, it had a hole.|	The carrot had a hole.|	1|
 |3	|Steve follows Fred's example in everything. He influences him hugely.|	Steve influences him hugely.|	0|
 11. [diagnostic](https://gluebenchmark.com/diagnostics) |[data](https://goo.gl/dJ5GR4)<br>
+
 |Lexical Semantics|	Predicate-Argument Structure|	Logic|	Knowledge|	Domain|	Premise	|Hypothesis|	Label|
 |:---:|---:|---:|---:|---:|---:|---:|---:|
 |	|	|Negation|		|Artificial|	The cat sat on the mat.	|The cat did not sit on the mat.|	contradiction|
