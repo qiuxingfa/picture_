@@ -48,8 +48,8 @@
 
    * 与下标进行对比
    * 不修改数组找出重复的数字
-      * 逐一把原数组的数字复制到辅助数组中
-      * 类似二分法，判断值为1-m的数字数目是否大于m
+     * 逐一把原数组的数字复制到辅助数组中
+     * 类似二分法，判断值为1-m的数字数目是否大于m
 4. 二维数组中的查找
 
    * 选取数组右上角（左下角）的数字进行比较，删除所在列或行
@@ -179,6 +179,19 @@
 * 先排序，然后首位递进查找，时间复杂度为O(nlogn)
 * 用字典搜索，时间复杂度为O(n)
 
+~~~python
+class Solution:
+    def twoSum(self, nums: List[int], target: int) -> List[int]:
+        dic = {}
+        for i,num in enumerate(nums):
+            another = target - num
+            if another in dic.keys():
+                return [dic[another],i]
+            dic[num] = i
+~~~
+
+
+
 ### 2. 两数相加
 
 * 使用变量来跟踪进位，考虑两个数长短不一的情况，考虑两个数相加后位数大于原来的数的情况
@@ -186,14 +199,92 @@
 ### 3. 无重复字符的最长字串
 
 * 定义字符到索引的映射，当找到重复字符时，立即跳过该窗口，时间复杂度O(n),空间复杂度O(min(m,n))
+* 用两个指针分别记录无重复字串的左右端点
+
+~~~python
+class Solution:
+    def lengthOfLongestSubstring(self, s: str) -> int:
+        if not s:
+            return 0
+        st = {}
+        i, num = 0, 0
+        for j in range(len(s)):
+            if s[j] in st:
+                i = max(st[s[j]],i)  # 截至j，以j为最后一个元素的最长不重复子串的起始位置
+            num = max(num, j - i + 1)
+            st[s[j]] = j + 1
+        return num
+~~~
+
+
 
 ### 4. 寻找两个有序数组的中位数
 
 * 二分法，时间复杂度O(log(m+n))
 
+~~~python
+class Solution:
+    def findMedianSortedArrays(self, nums1: List[int], nums2: List[int]) -> float:
+        m, n = len(nums1), len(nums2)
+        if m > n:
+            nums1, nums2, m, n = nums2, nums1, n, m
+        left_num = (m + n + 1)//2
+        i_min, i_max = 0, m
+        while i_min <= i_max:
+            i = (i_min + i_max)//2
+            j = left_num - i
+            if i > 0 and nums1[i-1] > nums2[j]:
+                i_max = i - 1
+            elif i < m and nums1[i] < nums2[j-1]:
+                i_min = i + 1
+            else:
+                if i == 0:
+                    left_max = nums2[j-1]
+                elif j == 0:
+                    left_max = nums1[i-1]
+                else:
+                    left_max = max(nums1[i-1],nums2[j-1])
+            
+                if (m + n) % 2 == 1:
+                    return float(left_max)
+                if i == m:
+                    right_min = nums2[j]
+                elif j == n:
+                    right_min = nums1[i]
+                else:
+                    right_min = min(nums1[i],nums2[j])
+                return (left_max+right_min)/2
+~~~
+
+
+
 ### 5. 最长回文字符串
 
 * 动态规划-中心扩散法
+
+~~~python
+class Solution:
+    
+    def spread(self, s, left, right):
+
+        while left >= 0 and right < len(s) and s[left]==s[right]:
+            left -= 1
+            right += 1
+        return s[left+1:right]
+            
+    
+    def longestPalindrome(self, s: str) -> str:
+        if s == s[::-1]:
+            return s
+        res = [s[0]]
+        for i in range(len(s)):
+            odd = self.spread(s,i,i)
+            even = self.spread(s,i,i+1)
+            res = max(odd,even,res,key=len)
+        return res
+~~~
+
+
 
 ### 6. Z字形变换
 
@@ -202,6 +293,46 @@
 ### 7.整数反转
 
 ### 8. 字符串转整数
+
+~~~python
+class Solution:
+    def myAtoi(self, str: str) -> int:
+        if not str:
+            return 0
+        while str and str[0] == ' ':
+            str = str[1:]
+        if not str:
+            return 0
+        
+        if str[0] not in '0123456789+-':
+            return 0
+        ab = 1
+        if str[0] == '-':
+            ab = -1
+            str = str[1:]
+        elif str[0] == '+':
+            str = str[1:]
+        else:
+            str = str
+        x = ''
+        for i in str:
+            if i in '0123456789':
+                x += i
+            else:
+                break
+        if x:
+            res = int(x)*ab
+            if res > 2**31-1:
+                return 2**31 - 1
+            elif res < -2**31:
+                return -2**31
+            else:
+                return res
+        else:
+            return 0
+~~~
+
+
 
 ### 9. 回文数
 
@@ -212,6 +343,27 @@
 ### 11. 盛水最多的容器
 
 * 双指针法
+
+~~~python
+class Solution:
+    def maxArea(self, height: List[int]) -> int:
+        if len(height) < 2:
+            return 0
+        m = 0
+        left = 0
+        right = len(height) - 1
+        while left < right:
+            if height[left] < height[right]:
+                m = max(height[left]*(right-left), m)
+                left += 1
+            else:
+                m = max(height[right]*(right-left), m)
+                right -= 1
+        
+        return m
+~~~
+
+
 
 ### 12. 整数转罗马数字
 
@@ -253,6 +405,33 @@
 
 * 递归，每次返回更小的头节点
 * 迭代，循环判断
+
+~~~python
+class Solution:
+    def mergeTwoLists(self, l1: ListNode, l2: ListNode) -> ListNode:
+        if not l1:
+            return l2
+        if not l2:
+            return l1
+        node = ListNode(0)
+        rel = node
+        while l1 and l2:
+            if l1.val < l2.val:
+                node.next = ListNode(l1.val)
+                node = node.next
+                l1 = l1.next
+            else:
+                node.next = ListNode(l2.val)
+                node = node.next
+                l2 = l2.next
+        if l1 != None:
+            node.next = l1
+        if l2 != None:
+            node.next = l2
+        return rel.next
+~~~
+
+
 
 ### 22. 括号生成
 
@@ -323,12 +502,75 @@
 
 * 回溯算法+剪枝
 
+### 46. 全排列
+
+* 回溯法
+
+~~~python
+class Solution:
+    def permute(self, nums: List[int]) -> List[List[int]]:
+        res = []
+        def backtrack(nums,temp):
+            if not nums:
+                res.append(temp)
+                return
+            for i in range(len(nums)):
+                backtrack(nums[:i]+nums[i+1:],temp+[nums[i]])
+        
+        backtrack(nums,[])
+        return res
+~~~
+
+### 50. Pow(x,n)
+
+* 快速幂，递归
+
+~~~python
+class Solution:
+    def fun(self,x,n):
+        if n==1:
+            return x
+        if n%2==0:
+            return self.fun(x,n//2)**2
+        else:
+            return self.fun(x,n-1)*x
+
+    def myPow(self, x: float, n: int) -> float:
+        if n==0:
+            return 1
+        if n<0:
+            x = 1/x
+            n = -n
+        return self.fun(x,n)
+~~~
+
+
+
 ### 53. 最大子序和
 
 * 贪心，每一步都选择最佳方案
 * 分治
 
 ![](https://pic.leetcode-cn.com/3aa2128a7ddcf1123454a6e5364792490c5edff62674f3cfd9c81cb7b5e8e522-file_1576478143567)
+
+### 56. 合并区间
+
+~~~python
+class Solution:
+    def merge(self, intervals):
+
+
+        intervals.sort()
+        rel = []
+        for l in intervals:
+            if not rel or l[0]>rel[-1][1]:
+                rel.append(l)
+            else:
+                rel[-1][1] = max(rel[-1][1],l[1])
+        return rel
+~~~
+
+
 
 ### 58. 最后一个单词的长度
 
@@ -360,6 +602,62 @@ $$
 * 合并后排序
 * 双指针，从前往后，从后往前
 
+### 92. 反转链表 II
+
+~~~python
+def reverse_node(head,m,n):
+    pre,cur = None,head
+    for i in range(m-1):
+        pre = cur
+        cur = cur.next
+        
+    pre_end = pre
+    reverse_end = cur
+    
+    for i in range(n-m+1):
+        nex = cur.next
+        cur.next = pre
+        pre = cur
+        cur = nex
+        
+    if pre_end:
+        pre_end.next = pre
+    else:
+        head = pre
+    reverse_end.next = cur
+    return head
+~~~
+
+### 93. 复原IP地址
+
+### 98. 验证二叉搜索树
+
+~~~python
+class Solution:
+    def isValidBST(self, root):
+        """
+        :type root: TreeNode
+        :rtype: bool
+        """
+        def helper(node, lower = float('-inf'), upper = float('inf')):
+            if not node:
+                return True
+            
+            val = node.val
+            if val <= lower or val >= upper:
+                return False
+
+            if not helper(node.right, val, upper):
+                return False
+            if not helper(node.left, lower, val):
+                return False
+            return True
+
+        return helper(root)
+~~~
+
+
+
 ### 100. 相同的树
 
 * 递归
@@ -375,11 +673,91 @@ $$
 * 递归（深度优先）
 * 借用栈进行迭代
 
+### 105. 从前序与中序遍历序列构造二叉树
+
+~~~python
+class Solution:
+    def buildTree(self, preorder: List[int], inorder: List[int]) -> TreeNode:
+        if not preorder:
+            return None
+
+        x = preorder[0]
+        root = TreeNode(x)
+        index = inorder.index(x)
+        
+        root.left = self.buildTree(preorder[1:index+1],inorder[:index])
+        root.right = self.buildTree(preorder[index+1:],inorder[index+1:])
+        return root
+~~~
+
+### 106. 从中序与后序遍历构造二叉树
+
+~~~python
+class Solution:
+    def buildTree(self, inorder: List[int], postorder: List[int]) -> TreeNode:
+        if not postorder:
+            return None
+
+        x = postorder[-1]
+        root = TreeNode(x)
+        index = inorder.index(x)
+
+        root.left = self.buildTree(inorder[:index],postorder[:index])
+        root.right = self.buildTree(inorder[index+1:],postorder[index:-1])
+        return root
+~~~
+
+
+
 ### 107. 二叉树的层次遍历 II
 
 * 层序遍历后逆序
 
 ### 108. 将有序数组转换为二叉搜索树
+
+~~~python
+class Solution:
+    def sortedArrayToBST(self, nums: List[int]) -> TreeNode:
+        if not nums:
+            return None
+        n = len(nums)
+
+        mid = (n-1)//2
+        root = TreeNode(nums[mid])
+        l = self.sortedArrayToBST(nums[:mid])
+        root.left = l
+        r = self.sortedArrayToBST(nums[mid+1:])
+        root.right = r
+        
+        return root
+~~~
+
+### 109. 有序链表转换二叉搜索树
+
+* 转为列表
+
+~~~python
+class Solution:
+    def sortedListToBST(self, head: ListNode) -> TreeNode:
+        lis = []
+        while head:
+            lis.append(head.val)
+            head = head.next
+        def fun(lis):
+            if not lis:
+                return None
+            n = len(lis)
+            mid = (n-1)//2
+            root = TreeNode(lis[mid])
+            root.left = fun(lis[:mid])
+            root.right = fun(lis[mid+1:])
+            return root
+        return fun(lis)
+~~~
+
+
+
+
 
 ### 110. 平衡二叉树
 
@@ -408,6 +786,89 @@ $$
 
 ### 125. 验证回文串
 
+### 127. 单词接龙
+
+
+
+### 130.被围绕的区域
+
+~~~python
+class Solution:
+    def solve(self, board: List[List[str]]) -> None:
+        """
+        Do not return anything, modify board in-place instead.
+        """
+
+        if not board: return
+  
+        row = len(board)
+        col = len(board[0])
+  
+        if row < 3 or col < 3: return
+        def dfs(i, j):
+            if i < 0 or j < 0 or i >= row or j >= col or board[i][j] != 'O':
+                return
+            board[i][j] = '#'
+            dfs(i - 1, j)
+            dfs(i + 1, j)
+            dfs(i, j - 1)
+            dfs(i, j + 1)
+        
+        for i in range(row):
+            dfs(i, 0)
+            dfs(i, col - 1)
+        
+        for j in range(col):
+            dfs(0, j)
+            dfs(row - 1, j)
+
+        for i in range(0, row):
+            for j in range(0, col):
+                if board[i][j] == 'O':
+                    board[i][j] = 'X'
+                if board[i][j] == '#':
+                    board[i][j] = 'O'
+
+~~~
+
+
+
+
+
+### 131. 分割回文串
+
+* 回溯
+
+~~~python
+class Solution(object):
+    # 本题采用回溯法
+    def partition(self, s):
+        """
+        :type s: str
+        :rtype: List[List[str]]
+        """
+        # 定义一列表，用来保存最终结果
+        split_result = []
+        # 如果给定字符串s为空，则没有分割的必要了
+        if len(s) == 0:
+            return split_result
+
+        def back(start=0, res=[]):
+            if start >= len(s):
+                split_result.append(res)
+                return 
+            for end in range(start+1, len(s)+1):
+                split_s = s[start:end]
+                # 如果当前子串为回文串，则可以继续递归
+                if split_s == s[start:end][::-1]:
+                    back(end, res+[split_s])
+
+        back()
+        return split_result
+~~~
+
+
+
 ### 136. 只出现一次的数字
 
 * 列表
@@ -418,6 +879,63 @@ $$
 ### 141. 环形链表
 
 * 双指针
+
+~~~python
+class Solution:
+    def hasCycle(self, head: ListNode) -> bool:
+        if not head:
+            return False
+        if not head.next:
+            return False
+
+        fast = head.next
+        slow = head
+
+        while slow != fast:
+            if not fast or not fast.next:
+                return False
+            fast = fast.next.next
+            slow = slow.next
+        return True
+~~~
+
+### 142. 环形链表 II
+
+* 先找到相遇节点，再找到入口
+
+~~~python
+class Solution:
+    def detectCycle(self, head: ListNode) -> ListNode:
+        if not head:
+            return None
+        if not head.next:
+            return None
+        
+        fast = head.next.next
+        slow = head.next
+        s = 1
+
+        while fast != slow:
+            if not fast or not fast.next:
+                return None
+            fast = fast.next.next
+            slow = slow.next
+            s += 1
+        
+        ss = head
+
+        while fast != ss:
+            fast = fast.next
+            ss = ss.next
+
+        return ss
+~~~
+
+
+
+### 148. 排序链表
+
+* 
 
 ### 155. 最小栈
 
@@ -456,6 +974,38 @@ $$
 f(k) = max(f(k-2)+A_k,f(k-1))
 $$
 
+### 200. 岛屿数量
+
+~~~python
+class Solution:
+    def numIslands(self, grid: List[List[str]]) -> int:
+        if not grid:
+            return 0
+        
+        m = len(grid)
+        n = len(grid[0])
+
+        def dfs(i,j):
+            if i<0 or j<0 or i>=m or j >= n or grid[i][j] != '1':
+                return 
+            grid[i][j] = '0'
+            dfs(i-1,j)
+            dfs(i,j-1)
+            dfs(i+1,j)
+            dfs(i,j+1)
+
+
+        rel = 0
+        for i in range(m):
+            for j in range(n):
+                if grid[i][j] == '1':
+                    rel += 1
+                    dfs(i,j)
+        return rel
+~~~
+
+
+
 ### 203. 移除链表元素
 
 * 哨兵节点-伪头
@@ -469,16 +1019,38 @@ $$
 * 迭代，三个指针
 * 递归
 
+~~~python
+class Solution:
+    def reverseList(self, head: ListNode) -> ListNode:
+        if not head or not head.next:
+            return head
+
+        pre,cur = None,head
+        while cur:
+            nex = cur.next
+            cur.next = pre
+            pre = cur
+            cur = nex
+
+        return pre
+~~~
+
+
+
 ### 217. 存在重复元素
 
 ### 219. 存在重复元素 II
 
-* 
+* 用散列表来维护k大小的滑动窗口
 
 ### 226. 翻转二叉树
 
 * 递归
 * 迭代
+
+### 231. 2的幂
+
+* 位运算
 
 ###  234. 回文链表
 
@@ -486,32 +1058,186 @@ $$
 * 递归
 * 定义快慢指针，快的到达末端时，慢的到达中间，反转后半部分进行比较
 
+### 235. 二叉搜索树的最近公共祖先
+
+* 根据p、q的值判断所处位置
+
+### 237. 删除链表中的节点
+
+* 把下一个节点复制到当前节点
+
+### 257. 二叉树的所有路径
+
+* DFS，深度优先遍历，递归
+
+### 263. 丑数
+
 ### 283. 移动零
 
 * 第一次遍历时，j指针记录非0个数，将非0的数赋值给nums[j]，第二次遍历法末尾的元素都赋值为0
 * 使用两个指针i和j，只要nums[i]!=0，就交换nums[i]和nums[j]
 
+### 299. 猜数字游戏
+
+### 300. 最长上升子序列
+
+* 动态规划
+
+~~~python
+class Solution:
+    def lengthOfLIS(self, nums: List[int]) -> int:
+        
+        if not nums:
+            return 0
+        dp = [1]*len(nums)
+
+        for i in range(1,len(nums)):
+            for j in range(i):
+                if nums[i] > nums[j]:
+                    dp[i] = max(dp[i],dp[j]+1)
+
+        return max(dp)
+~~~
+
+
+
+### 345. 反转字符串中的元音字母
+
+* 双指针
+
+### 349. 两个数组的交集
+
+### 367. 有效的完全平方数
+
+* 二分查找
+* 牛顿迭代，x = 1/2(x+num/x)
+
+### 371. 两整数之和
+
+* 位运算
+
+### 383. 赎金信
+
+### 387. 字符串中的第一个唯一字符
+
+* 用字典存储字符数
+
+### 389. 找不同
+
+### 401. 二进制手表
+
+### 405. 数字转换为十六进制数
+
+### 409. 最长回文串
+
+~~~python
+class Solution:
+    def longestPalindrome(self, s: str) -> int:
+        s = list(s)
+        temp = [s[0]]
+        rel = 0
+        for i in s[1:]:
+            if i in temp:
+                rel += 2
+                temp.remove(i)
+            else:
+                temp.append(i)
+        if temp != []:
+            rel += 1
+        return rel
+~~~
+
+
+
+### 415. 字符串相加
+
 ### 437. 路径总和 III
 
 * dfs和递归
 
+### 441. 排列硬币
+
+### 443. 压缩字符串
+
+* 双指针
+
+### 447. 回旋镖的数量
+
 ### 448. 找到所有数组中消失的数字
 
 * 将所有数作为数组下标，置对应数为负数，仍为正数的位置即为未出现过的数
+
+### 453. 最小移动次数使数组相等
+
+* 增加n-1个数相当于减少1个数，减少所有数到与最小值相等即可
 
 ### 461. 汉明距离
 
 * 内置位计数功能
 * 移位计数
 
+### 463. 岛屿的周长
+
+### 475. 供暖器
+
+* 对于每个房屋，取最小距离，然后在这些最小距离中取最大值
+
+### 485. 最大连续1的个数
+
+### 501. 二叉搜索树中的众数
+
+### 507. 完美数
+
+### 509. 斐波那契数列
+
+### 516. 最长回文子序列
+
+~~~python
+class Solution:
+    def longestPalindromeSubseq(self, s: str) -> int:
+        n = len(s)
+        dp = [[0]*n for i in range(n)]
+        for i in range(n):
+            dp[i][i] = 1
+        for i in range(n-1,-1,-1):
+            for j in range(i+1,n):
+                if s[i] == s[j]:
+                    dp[i][j] = dp[i+1][j-1] + 2
+                else:
+                    dp[i][j] = max(dp[i+1][j],dp[i][j-1])
+        return dp[0][n-1]
+~~~
+
+
+
+### 521. 最长特殊序列 I
+
 ### 538. 把二叉搜索树转换为累加树
 
 * 回溯法，判断当前节点是否存在，存在几句递归右子树，然后更新总和和当前节点值，然后递归左子树
 * 使用栈迭代
 
+### 541. 反转字符串 II
+
 ### 543.二叉树的直径
 
 * 深度优先搜索，定义递归函数depth计算子树深度，子树深度为max(L, R) + 1，最大节点数为 L + R + 1
+
+### 551. 学生出勤记录 I
+
+### 557. 反转字符串中的单词 III
+
+### 559. N叉树的最大深度
+
+* 深度优先+递归
+
+### 561. 数组拆分 I
+
+### 563. 二叉树的坡度
+
+* 递归
+
+### 575. 分糖果
 
 ### 581. 最短无序连续子数组
 
@@ -519,10 +1245,188 @@ $$
 * 使用栈
 * 不使用额外空间，无序数组中最小元素的正确位置可以决定左边界，最大元素的正确位置可以决定右边界
 
+### 589. N叉树的前序遍历
+
+### 599. 两个列表的最小索引总和
+
+* 哈希表
+
+### 605. 种花问题
+
 ### 617. 合并二叉树
 
 * 递归，对两棵树进行前序遍历，将对应的节点进行合并
 * 迭代，利用栈
+
+### 633. 平方数之和
+
+* 双指针
+* 二分查找
+* 费马平方和定理
+  * 一个非负整数 c 能够表示为两个整数的平方和，当且仅当 c 的所有形如 4k+3 的质因子的幂次均为偶数。
+
+### 637. 二叉树的层平均值
+
+* 
+
+### 647. 回文子串
+
+* 从2N+1个中心往两侧延申
+
+```python
+class Solution(object):
+    def countSubstrings(self, S):
+        N = len(S)
+        ans = 0
+        for center in xrange(2*N - 1):
+            left = center / 2
+            right = left + center % 2
+            while left >= 0 and right < N and S[left] == S[right]:
+                ans += 1
+                left -= 1
+                right += 1
+        return ans
+```
+
+* 马拉车算法
+
+### 680. 验证回文字符串 II
+
+* 判断两次
+
+```python
+class Solution:
+    def validPalindrome(self, s: str) -> bool:
+        #双指针
+        def helper(s1:str):
+            l=0
+            r=len(s1)-1
+            while l<=r:
+                if s1[l]!=s1[r]:
+                    return l,r
+                l+=1
+                r-=1
+                if l>r:
+                    return l,r
+        #第一次判别 
+        l1,r1=helper(s)
+        if l1>r1:
+            return True
+        # 当出现有不相等的字符，返回不相等的字符的区间的下标 ，左边部分[a,b]
+        l,r=helper(s[l1:r1])
+        if l>r:
+            return True
+        # 右边部分 比如[a,b,c] 放进判别的是[b,c]
+        l,r=helper(s[l1+1:r1+1])
+        if l>r:
+            return True
+        return False
+```
+
+### 704. 二分查找
+
+~~~python
+class Solution:
+    def search(self, nums: List[int], target: int) -> int:
+        l = 0
+        r = len(nums)-1
+        
+        while l<=r:
+            mid = (l+r)//2
+            if nums[mid] == target:
+                return mid
+            if nums[mid] > target:
+                r = mid - 1
+            if nums[mid] < target:
+                l = mid+1
+        return -1
+~~~
+
+### 876. 链表的中间节点
+
+* 快慢指针
+
+~~~python
+class Solution:
+    def middleNode(self, head: ListNode) -> ListNode:
+        slow = fast = head
+        while fast and fast.next:
+            slow = slow.next
+            fast = fast.next.next
+        return slow
+
+~~~
+
+
+
+### 866. 回文素数
+
+### 917. 仅仅反转字母
+
+~~~python
+class Solution:
+    def reverseOnlyLetters(self, S: str) -> str:
+        s =list(S)
+        i = 0
+        j = len(s)-1
+        while i<j:
+            if s[i].isalpha() and s[j].isalpha():
+                s[i],s[j] = s[j],s[i]
+                i += 1
+                j -= 1
+            if not s[i].isalpha():
+                i += 1
+            if not s[j].isalpha():
+                j -= 1
+        return ''.join(s)
+~~~
+
+### 1190. 反转每对括号间的字串
+
+* 用栈保存左括号，遇到右括号时弹出
+
+~~~python
+class Solution:
+    def reverseParentheses(self, s: str) -> str:
+        stack = []
+        temp = []
+        for i,x in enumerate(s):
+            if x == '(':
+                stack.append(i)
+            elif x == ')':
+                left = stack.pop() + 1
+                right = i
+                temp.append([left,right])
+        s = list(s)
+        for num in temp:
+            s[num[0]:num[1]] = s[num[0]:num[1]][::-1]
+        s = [i for i in s if i not in '()']
+        return ''.join(s)
+~~~
+
+
+
+### 1328. 破坏回文串
+
+* 分情况，前一半有非’a'，直接替换，没有则替换最后一个a
+
+### 1332. 删除回文子序列
+
+### 1400. 构造K个回文字符串
+
+~~~python
+class Solution:
+    def canConstruct(self, s: str, k: int) -> bool:
+        # 右边界为字符串的长度
+        right = len(s)
+        # 统计每个字符出现的次数
+        occ = collections.Counter(s)
+        # 左边界为出现奇数次字符的个数
+        left = sum(1 for _, v in occ.items() if v % 2 == 1)
+        # 注意没有出现奇数次的字符的特殊情况
+        left = max(left, 1)
+        return left <= k <= right
+~~~
 
 
 
