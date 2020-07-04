@@ -8,7 +8,7 @@
 
 * 话题检测与跟踪(TDT)的目标就是检测相关信息并跟踪事件的发展变化
 
-* 回顾式的话题检测即检测已有新闻库中尚未发现的话题,在线的话题检测即在线的检测当前到达的新闻所属的话题.
+* 回顾式的话题检测即检测已有新闻库中尚未发现的话题,在线的话题检测即在线的检测当前到达的新闻所属的话题
 
 * 定义话题为讨论一致的话题或概念的新闻集,两篇讨论不同特定问题的新闻文档可以属于同一个话题
 
@@ -595,11 +595,15 @@
 * The traditional approach to FSD, where each new story is compared to all, or a constantly growing subset, of previously seen stories, does not scale to the Twitter streaming setting
 * Allan et al. (2000) report that this distance（cosine） outperforms the KL divergence, weighted sum, and language models as distance functions on the first story detection task.
 * ![](https://github.com/qiuxingfa/picture_/blob/master/2019/b0f3cacad9f3fb7003e3de2de0afd82.png)
+* 如果输入点和候选点的距离都很远的话，使用LSH难以找到最近邻，所以如果使用LSH找到的最小距离大于某个阈值，则将该点与最近的2000个文本进行比较寻找最近邻，
+* 在某个桶内的文档数为固定值，保留最新的文档，每个文档最多与3L个文档进行比较
+* 设置阈值t为0.5
 * In the context of first story detection, this means we are not allowed to store all of the previous data in main memory nor compare the new document to all the documents returned by LSH.
 
 ### Experiments
 
 * TDT5
+* 超平面数量k=13，两篇文档相似度阈值为0.2，
 * We compare the systems on the English part of the TDT5 dataset, consisting of 221, 306 documents from a time period spanning April 2003 to September 2003.
 * Data was collected through Twitter’s **streaming API**. Our corpus consists of 163.5 million timestamped tweets, totalling over 2 billion tokens
 * we employed two human experts to manually label all the tweets returned by our system as either Event, Neutral, or Spam.we only labeled the 1000 fastest growing threads from June 2009
@@ -1063,7 +1067,7 @@ ___
   * data organization or clustering
 * TDT主要分为两种：
   * retrospective event detection (RED) (iterative clustering algorithms)
-  * new event detection(NED)(query-free retrieval tasks, incremental (greedy) algorithms)
+  *  new event detection(NED)(query-free retrieval tasks, incremental (greedy) algorithms)
 * However, the TDT line of research **assumes** that all documents are relevant and contain some
   old or new events of interest. This assumption is clearly **violated** in Twitter data streams, where relevant events are buried in large amounts of noisy data.
 * 对于UED，Sankaranarayanan et al. (2009) 先用朴素贝叶斯分类器判断是否新闻相关，再进行聚类（考虑时间信息），还使用了标签信息，还有一些方法先进行聚类，然后判断是否与现实世界相关
@@ -1135,7 +1139,6 @@ ___
 ---
 
 ## [Fine-grained Event Categorization with Heterogeneous Graph Convolutional Networks](https://arxiv.org/pdf/1906.04580.pdf)(arXiv 2019)
-
 * **Pairwise Popularity Graph Convolutional Network** (PP-GCN) based fine-grained social event categorization model
 * build a **weighted adjacent matrix** as input to the PP-GCN model
 * modeling social events is very complicated and ambiguous,
@@ -1344,7 +1347,6 @@ ___
 ---
 
 ## [Exploiting the Ground-Truth: An Adversarial Imitation Based Knowledge Distillation Approach for Event Detection](https://aaai.org/ojs/index.php/AAAI/article/view/4649/4527)(AAAI 2019)
-
 * 首先使用一个teacher module 从ground-truth中学习知识表示，然后通过对抗生成器使用一个student module去模仿teacher，知识蒸馏被使用于输入的特征编码中
 * ED面临的主要问题是自然语言表达的含糊性，一方面同一事件可以以不同的方式进行表达，另一方面，同一种表达方式可以是不同的事件
 * 对于ED，现有的方法基本上是使用额外的NLP工具预测块标签，然后将预测的标签转化为向量化的知识表示，这是一种pipeline的方法，容易产生错误传播
@@ -1375,8 +1377,7 @@ ___
     $$
     PMI_t(i,j) = log\frac{d(i,j)}{d(i)d(j)/D}
     $$
-
-  * ![](https://github.com/qiuxingfa/picture_/blob/master/2019/ad71f4c67e2472fe820ed945a9c50f3.png)
+    ![](C:\Users\qxf\AppData\Local\Temp\WeChat Files\ad71f4c67e2472fe820ed945a9c50f3.png)
 
   * 动态图卷积其实和RNN类似
     $$
@@ -1411,7 +1412,7 @@ ___
 
 * 数据为event data from ICEWS，包含20个主要类别以及下属的子类别，本文关注于 抗议 相关的事件，从四个相关国家挑选数据，使用tf-idf挑选关键词，最终每个图的节点数大约为600，
 
-* ![](https://github.com/qiuxingfa/picture_/blob/master/2019/9dc5e5ad289ce651a457ed7b0a56b65.png)
+  ![](C:\Users\qxf\AppData\Local\Temp\WeChat Files\9dc5e5ad289ce651a457ed7b0a56b65.png)
 
 * 总结
 
@@ -1431,25 +1432,33 @@ ___
 
 * 文章提出的方法
 
-  * ![](https://github.com/qiuxingfa/picture_/blob/master/2019/e7e1d6144a5199b88925a43193916c7.png)
+  ![](C:\Users\qxf\AppData\Local\Temp\WeChat Files\e7e1d6144a5199b88925a43193916c7.png)
 
   * 首先对输入进行encode，使用使用Glove作为输入，bi-GRU和attention得到推特的表示z
-  * ![](https://github.com/qiuxingfa/picture_/blob/master/2019/39bcf48c384b34a90f20eca7da49aa8.png)
+
+    ![](C:\Users\qxf\AppData\Local\Temp\WeChat Files\39bcf48c384b34a90f20eca7da49aa8.png)
+
   * 对于某个时刻的推特t，文章认为有三种action的输出概率，即add，update和drop，这三种输出对应着对于当前推特数据的不同处理，在这个阶段，输入推特表示，事件关键词以及事件表示，通过attention，dense，maxpool和softmax层，输出此时action的概率
-  * ![](https://github.com/qiuxingfa/picture_/blob/master/2019/5cdd83eb463ce1a5f24f2835c610961.png)
+
+    ![](C:\Users\qxf\AppData\Local\Temp\WeChat Files\5cdd83eb463ce1a5f24f2835c610961.png)
 
   * 若选择update，则将zj输入全连接层得到属于各个事件的概率，并且对事件做一次更新，若选择add，方法和update类似，只是将Mj换成初始状态M0
-  * ![](https://github.com/qiuxingfa/picture_/blob/master/2019/913ca333b970459e9c005ee8557c2c6.png)
-  * ![](https://github.com/qiuxingfa/picture_/blob/master/2019/7be9e1fe36c86fced45f5de46b1e4b0.png)
+
+    ![](C:\Users\qxf\AppData\Local\Temp\WeChat Files\913ca333b970459e9c005ee8557c2c6.png)
+
+    ![](C:\Users\qxf\AppData\Local\Temp\WeChat Files\7be9e1fe36c86fced45f5de46b1e4b0.png)
+
   * 对于episode learning，即随机挑选N个推特，属于k个不同的事件，组成一个episode进行训练，类似于batch，但序列前后是相关的，loss定义如下
-  * ![](https://github.com/qiuxingfa/picture_/blob/master/2019/0c48bca13f02edb0d37c06988f4687b.png)
+
+    ![](C:\Users\qxf\AppData\Local\Temp\WeChat Files\0c48bca13f02edb0d37c06988f4687b.png)
+
   * 对于关键词的挑选，则将zj输入全连接层得到属于各个词为关键词的概率，论文提到说这里使用了强化学习的方法，POO（Proximal policy optimization algorithms），使用NMI作为reward，这个部分论文只是提了一句，不太清楚是怎么运作的
 
 * 使用NMI和B-cubed作为评估
 
-* ![](https://github.com/qiuxingfa/picture_/blob/master/2019/755d240e348dd348a926852e7b851c2.png)
+  ![](C:\Users\qxf\AppData\Local\Temp\WeChat Files\755d240e348dd348a926852e7b851c2.png)
 
-* ![](https://github.com/qiuxingfa/picture_/blob/master/2019/f82ca46e42b30956ffc732f0a3ad592.png)
+  ![](C:\Users\qxf\AppData\Local\Temp\WeChat Files\f82ca46e42b30956ffc732f0a3ad592.png)
 
 * 总结
 
@@ -1457,6 +1466,522 @@ ___
   * 存在的一些问题
     * 文章的重要细节缺失，比如是否有训练集和测试集的划分，如何进行测试，使用了多少数据，测试时是怎么划分episode的，不同的episode之间是否有联系，用强化学习进行关键词提取的方法几乎没提，以及用什么词作为候选也不清楚，关键词也没有groun-truth
     * episode learning似乎忽略了推特之间的时间先后关系，论文实验显示episode的长度对结果影响很大，>10效果就很差了，这与实际成千上万的推特一起输入的情况相差甚远，实验数据中事件数k>序列长度N的情况较难理解，
+
+---
+
+## [Real-Time Novel Event Detection from Social Media](https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=7930053)(ICDE 2017)
+
+* 方法
+
+  * 数据预处理包括删除非英文推特和噪音，聚类过程中认为转发和有同一链接的为同一事件，从语义标签的角度进行聚类，包括使用 TweetNLP识别专有名词（命名实体），Hashtag，使用OpenCalais以及一些规则提取地理位置，Mention，普通名词，TweetNLP识别动词，时间信息（对于新事件的发现作用不大，因为推特基本上在同一个时间窗口但属于不同事件）
+
+  * 将语义信息进行集合，权重和阈值将会从训练数据中学习，另一种方法为每个语义种类的相似度结果进行投票
+
+    
+    $$
+    S(T_i,C_j)=a*V_P+b*V_m+c*V_l+d*V_v+e*V_n+f*V_h
+    $$
+
+  * 使用不同的方法对聚类进行表示
+
+  * 使用词向量而不是WordNet对词表进行扩展
+
+  * 新事件分数计算由如下公式计算，T为阈值，S_max为推特与事件的最大相似度
+    $$
+    S_{novelty}=(T-S_{max})/T
+    $$
+  
+* 事件的时间信息由推特的平均时间信息表示，时间信息提取由rule-based approach and the Temporal Specific Word Embedding两个部分进行提取，**本文只使用了规则的方法**，本文定义时间超过12h的事件为old
+  
+* 系统会将不活跃（10h无更新）的事件清出缓存
+  
+* 实验
+
+  * 在event2012上进行实验，与[UMass](http://ciir.cs.umass.edu/pubfiles/ir-201.pdf)和[LSH](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.170.9438&rep=rep1&type=pdf)进行比较，15万条数据中最后得到约10万数据，并随机挑选130万无标签数据作为噪音，
+  * 使用NMI和B-cubed进行评估
+  * 对于使用这个系统的专家和记者来说，他们更关心召回率，使用随机挑选的2536条新闻媒体的标题作为benchmark，使用人工评估时间信息识别模块
+
+* 
+
+---
+
+## [A Consolidated Open Knowledge Representation for Multiple Texts](https://www.aclweb.org/anthology/W17-0902.pdf)(ACL 2017)
+
+* Introduction
+  * 如何在语义上合并表示多个文本信息
+  * 在集成时使用共指关系
+  * 包括 entities，consolidated propositions，lexical entailment graphs
+  * 通过各种指代链接技术对多文档的信息进行压缩
+* 数据
+  * 标注了27个簇共1257条推特
+
+
+
+---
+
+## [Real-Time Entity-Based Event Detection for Twitter](https://link.springer.com/content/pdf/10.1007%2F978-3-319-24027-5_6.pdf)(CLEF 2015)
+
+* 介绍
+  * 目前大部分方法对于实时性的要求来说太慢或者只能对特定的事件进行检测
+  * 本文使用 命名实体 增强事件检测
+  * 使用event2012数据集
+  * LSH：Streaming first story detection with application to twitter
+* 方法
+  * 预处理：句法分析和标注，使用GATE Twitter POS model
+  * 聚类：当前推特和包含相同实体的推特集合D
+  * 突发事件检测：根据指定事件窗口的推特数来判断
+* 实验
+  * 认为某事件的超过5%或者15条推特被检测到，则该事件被检测到
+  * 检测到的很多事件其实并不在标注数据中
+  * 只有47.5%的推特有至少一个命名实体
+  * 在所有506个事件中，有14个事件包含少于5条推特，42个事件少于15，72个事件少于30，另外，有41个事件有5条一下推特包含实体
+
+
+
+---
+
+## [Automatic Sub-Event Detection in Emergency Management Using Social Media](http://www-itec.uni-klu.ac.at/bib/files/p683.pdf)(WWW 2012)
+
+* 方法为tfidf+SOM(self-organizing map)
+* SOM是一种没有隐含层的特殊神经网络，以tf-idf作为输入，
+* 只使用一些文本信息
+
+
+
+---
+
+## [Online Event Detection and Tracking in Social Media Based on Neural Similarity Metric Learning](https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=8004905)(ISI 2017)
+
+* 这是论文[Joint Learning with Keyword Extraction for Event Detection in Social Media](http://ir.ia.ac.cn/bitstream/173211/21799/1/ISI18_long_088.pdf) 的前一篇论文，也是那篇论文的比较对象
+
+* 简介
+
+  * 本文使用神经网络学习相似度度量和事件的低维度表示
+  * 基于聚类的方法效果比其他方法要好
+
+* 方法
+
+  * 以glove为输入，后接双向GRU和attention，得到一个推特表示，通过全连接输出是否事件相关的概率
+  * 学习一个判断两条推特是否属于同一事件的相似度函数 f(T1,T2)=g(T1)*g(T2),即学习一个合适的推特表示函数，和上面类似，计算cosin相似
+  * 随机选取正样本和负样本，使用交叉熵作为损失函数
+  * 事件是推特表示的加权和，事件表示更新为
+
+  $$
+  K_i = \frac{K_i+α(\tilde{s}-K_i)}{||K_i+α(\tilde{s}-K_i)||}
+  $$
+
+  
+
+* 实验
+
+  * 标注2016年8月10号-2016年9月10号的619个事件，为了训练事件相关的分类器，分别选择33808条正负样本数据，并且分别选择100万正负样本训练事件表示，并使用2016年11月10号-2016年12月10号的957万数据作为评估
+  * 词向量维度为100，GRU size为100，memory size为100，更新率α为0.4，相似度阈值为0.5
+  * baseline：PS，TS，MABED
+  * 进行人工评估，选择数量最多的40个事件进行评估，判断事件是否有意义或者重复
+
+
+
+---
+
+## [Graph-based Event Extraction from Twitter](https://hal.inria.fr/hal-01561439/document)(RANLP 2017)
+
+* 介绍
+
+  * 使用时间序列的事件图，然后使用简单的图算法和类似Page-Rank的方法
+  * 传统的基于关键词和命名实体的方法对于规模较小的事件不友好，而且拥有相同关键词而不属于同一事件的例子也很多
+  * 文章将事件抽取分为 特定领域（有监督分类） 和 开放领域
+
+* 方法
+
+  * 推特预处理: 使用TweetMotifs对推特进行预处理，删除转发、url、表情和non-ASCII 字符，文章并没有去除停用词，因为停用词可能会是命名实体的一部分如of，然后使用规则将hashtag进行切分，使用SysSpell对拼错的词语进行纠正
+
+  * 使用NERD-ML进行命名实体识别，并使用外部知识图谱进行链接
+  * 将命名实体和其前后k个词语作为节点，如果出现在同一个命名实体窗口则建立边，以共现程度来表示权重
+  * 使用图分割算法，并且使用类似PageRank的方法对节点排序
+
+
+
+* 实验
+  * 在FSD和EVENT2012上进行实验
+
+
+
+---
+
+## [Detection of Event Onset using Twitter](https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=7727381)(IJCNN 2016)
+
+* 介绍
+
+  * LDA方法需要提前定义事件，但对于noisy event不太能检测出来，LSH需要大量的计算
+
+* 方法
+
+  ![](pic/001.png)
+
+  * Tweet Tokenization and Graph Generation，删除特殊字符、停用词、URL和转发标识
+  * Graph Pruning and Clustering，删除一些出现频率较低和不重要的词
+
+* 实验
+
+  * 使用event2012和Drug两个数据集
+
+---
+
+## [A Multi-view Clustering Model for Event Detection in Twitter](https://link.springer.com/content/pdf/10.1007%2F978-3-319-77116-8_27.pdf)(CICLing 2017)
+
+* 介绍
+
+  * 很少有方法考虑时间序列信息
+  * 使用多视角聚类方法对关键词进行聚类
+  * 基于文本聚类的方法需要处理大量的文本
+  * 主题模型较难捕捉同一时间段的事件，对于短文本效果也不好
+  * 关键词聚类是主要方法
+
+* 方法
+
+  ![](pic/002.png)
+
+  * 三个假设：1）关键词的集合可以代表事件；2）主题模型可以很好地捕捉到主题词；3）在同一时间段共同出现的词可能代表着同一事件
+  * 使用DTW（dynamic time warping）算法计算两个词的距离
+
+* 实验
+
+  * 使用FSD2011和EVENT2012两个数据集
+  * 使用ARK进行预处理
+  * 与MABED和LDA方法进行对比
+  * 使用人工评估
+
+
+
+---
+
+## [ A Novel Event Detection Model Basedon Graph Convolutional Network](https://kopernio.com/viewer?doi=10.1007/978-981-15-3281-8_15&route=6)(WISE 2019)
+
+* 介绍
+
+  * tf-idf和LDA的方法没有捕捉到文本的结构信息,本文提出使用图卷积网络的方法,使用ConceptGraph来表示文档,并使用SiameseGCN来计算相似度
+
+* 方法
+
+  ![](pic/003.png)
+
+  * 首先建立一个ConceptGraph,将结构信息和语义信息进行融合,然后训练一个SiamGCN,以初始化的conceptGraph作为输入,输出graph embedding,加上tf-idf向量和1维的时间向量,最后使用bik-means方法进行聚类
+  * 使用jieba进行分词,使用LTP进行命名实体识别和关键词识别
+
+  ![](pic/004.png)
+
+  * 首先构建关键词共现图,以一个句子作为时间窗口,将密集的子图称为concept,使用**betweenness centrality score** based on overlapping community detection algorithms 提取 concept,以平均word2vec来表示节点的初始特征向量,tf-idf相似度作为边权重
+  * Siam GCN
+
+  $$
+  H^{(l+1)} = σ(\tilde{D}^{-1/2}\tilde{A}\tilde{D}^{-1/2}H^{(l)}W^{(l)})
+  $$
+
+  * 通过L2 distance将两个graph embedding结合,并使用hing loss作为损失函数
+  * 使用bik-means算法进行聚类
+
+* 实验
+
+  * 标注了中文数据集,包括12865对正样本和16198对负样本
+  * 用一些方法作为baseline,TF-IDF,JS-IDF等方法,
+
+---
+
+## [Multi-Perspective Relevance Matching with Hierarchical ConvNets for Social Media Search](https://aaai.org/ojs/index.php/AAAI/article/view/3790/3668)(AAAI 2019)
+
+* 针对社交媒体文本的排序模型
+
+* 在IR中，**relevance matching **是核心问题，与其他的NLP任务中的 **semantic matching** 区别开来（paraphrase detection & answer sentence selection）
+
+* 在document ranking中queries 和 documents 是不平衡的，Siamese的结构并不适合
+
+* 相对于传统的检索任务，社交媒体的搜索存在以下不同：
+
+  * 文本长度
+  * 非正式的文本（hashtag，缩写，拼写错误，emoji）
+  * 多种的相关信息（url和hashtag）
+
+* 贡献：
+
+  * 考虑从词和字的角度建模，使得模型更加鲁棒
+  * 使用分层的卷积网络捕捉不同层次的match signal
+  * query和post（以及url）的匹配有一个相似度匹配层来实现
+
+* 模型
+
+  ![](pic/005.png)
+
+  * Multi-Perspective Input Modeling
+
+    * 在社交媒体领域，OOV问题比较严重（混合词，非英文，拼写错误，缩写，专有名词等），作者发现50%-60%的词语为OOV，数据中约50的推特包含url
+    * 在做相关匹配时考虑三个输入
+      * query and post at word-level
+      * query and post at character-level
+      * query and URL at character-level（trigrams）
+
+  * Hierarchical Representation Learning
+
+    * 堆积了多层卷积网络（N=4），将最后一层的输出作为句子表示
+
+    $$
+    M^h = CNN^h(M^{h-1})
+    $$
+
+    * M0就是输入embedding，对于Q和D，CNN参数是共享的
+    * 深层神经网络能够抽取更加高层和抽象的信息，并且可以捕捉长距离的依赖关系
+
+  * Similarity Measurement andWeighting
+
+    * 每层都对query和document进行了匹配，类似attention机制
+
+    ![](pic/006.png)
+
+    ![](pic/007.png)
+
+    * 引入了IDF作为先验知识，降低了某些高频词的matching score
+
+    ![](pic/008.png)
+
+    * 匹配的过程并没有需要学习的参数，使得模型更加鲁棒和可解释性更高，attention机制可以追踪到哪个输入对最终分数的贡献最高
+
+    ![](pic/009.png)
+
+    * 使用对数损失
+
+  * 实验
+
+    * TREC Microblog Tracks 2011-2014，每个包含50个queries（三个做训练，一个做验证）
+
+    ![](pic/010.png)
+
+    * 不同于其他方法直接将query和document相乘得到相似度，本文通过多层CNN得到更好的语义表示，并且通过字级别的信息对relevance signals进行了补充
+
+    ![](pic/011.png)
+
+    
+
+    
+
+* 总结
+
+  * 第一个在社交媒体文本上使用neural ranking models进行检索的工作
+  * 从输入query，document和url的词和字的角度考虑相关性
+  * 通过多层CNN进行特征抽取
+  * 通过idf引入attention
+
+* 思考
+
+  * CNN模块和腾讯在17年提出的DPCNN类似，DPCNN结构更深，7个模块，每个模块两层卷积，还有残差结构
+  * 使用idf进行attention比较特别
+
+  
+
+  
+
+---
+
+## [Adversarial Training for Community Question Answer Selection Based on Multi-Scale Matching](https://aaai.org/ojs/index.php/AAAI/article/view/3810/3688)(AAAI 2019)
+
+* Community-based question answering，选择式，有两种模式，一种是根据新问题选择相似问题，另一种是根据问题选择答案，
+
+* 作者将这看做二分类问题，用二分类问题的思路来解决匹配问题，存在样本不平衡的问题，绝大多数QA是不匹配的，如SemEval 2017中只有2.8%是匹配的，作者选择了使用了对抗训练的方法减轻样本不平衡的问题，使用生成式模型G选择负样本去挑战分类器，随机选择的负样本对模型的贡献很小
+
+* 同时考虑word和n-gram不同粒度
+
+* Adversarial Training
+
+  * generator学习到真实分布P_data(A|Q)，然后generate (**sample**) relevant answers，另一方面，discriminator用来判断相关或不相关
+
+  ![](pic/012.png)
+
+  ![](pic/013.png)
+
+  * 建立另一个同样的Multi-scale Matching model，然后得到 **所有** 候选答案（实际实验时只挑选了固定数量，包括已标注的负例和其他问题的答案）的分数，给置信度高的答案更高的被挑选概率（top10）
+  * GAN要求generator 和 discriminator都是可微的，随机采样的方法并非可微的，使用policy gradient(强化学习)方法解决这个问题，PG作为action，而log(1-D(A'|D))作为reword（**？**）
+
+  ![](pic/014.png)
+
+* Multi-scale Matching Model
+
+  ![](pic/015.png)
+
+  * 用了k个CNN模块对输入进行编码，得到k层表示
+
+  ![](pic/016.png)
+
+* 实验
+
+  * SemEval 2017
+
+  ![](pic/017.png)
+
+  * SemEval 2016
+
+    ![](pic/018.png)
+
+    * 效果不如其他，因为数据更均衡一些，对抗训练的动机就是采样更少的负样本
+
+* 总结
+
+  * 用二分类的思路来进行QA，并且使用了对抗训练的策略减缓样本不均衡的问题，generative model用来挑选更有挑战性的负样本，使用Multi-scale Matching
+    model获取不同粒度的匹配信息
+
+
+
+---
+
+## [Matching Article Pairs with Graphical Decomposition and Convolutions](https://www.aclweb.org/anthology/P19-1632.pdf)（ACL 2019）
+
+* 任务：文章匹配（判断文章是否描述同一新闻）
+
+* 现有方法大部分为句子级别的匹配所设计，在长文本匹配中效果不好，作者使用Concept Interaction Graph表示文章
+
+* Concept Interaction Graph
+
+  * concept 为相似句子中的关键词（TextRank）集合（聚类），将每个句子分配到最近的concept节点，边表示concept之间的关联程度
+
+  ![](./pic/019.png)
+
+  * KeyGraph Construction：使用TextRank的方法提取关键词，连接同时出现在一个句子中的关键词
+  * Concept Detection：使用Community detection将图进行划分，使用betweenness centrality score based algorithm，减少了节点数，加速了匹配过程
+  * Sentence Attachment：用tf-idf相似度，将句子分配到最近的节点
+  * Edge Construction：用tf-idf相似度
+  * Encoding Local Matching Vectors：包括孪生网络的输出和tf-idf相似度等
+  * Matching Aggregation via GCN：将上面的Matching Vectors拼接起来作为输出，邻接矩阵定义为节点之间的tf-idf相似度
+
+  $$
+  H^{(l+1)} = \sigma(\tilde{D}^{-1/2}\tilde{A}\tilde{D}^{-1/2}H^{(l)}W^{l})
+  $$
+
+  * 将最后一层的输出取平均后输入全连接层得到最终结果
+
+* 实验
+
+  * 使用标注的新闻数据，正负例大致均衡，负例挑选包含相似关键词但不属于同一事件的新闻对
+  * 使用一些传统的匹配方法作为baseline，包括LDA，DSSM，C-DSSM，ARC-I，ARC-II以及BERT等等
+
+  ![](./pic/020.png)
+
+  * community detection 带来了更差的效果，直接用关键词作为节点可以得到更好的效果，但是community detection能将平均节点数从30降到13，可节约55%的计算时间
+  * 在最后增加Global Features对结果影响很小，表示主要是GCN在起作用
+
+* 总结
+  * 主要是构建了Concept Interaction Graph，然后使用GCN的方法进行匹配
+  * 疑问：如果两篇文章不是同一事件，如何构建Concept Interaction Graph？如何保证每个节点都有来自doc1和doc2的句子？
+
+
+
+## [Semantic Sentence Matching with Densely-Connected Recurrent and Co-Attentive Information](https://aaai.org/ojs/index.php/AAAI/article/view/4627/4505)(AAAI 2019)
+* 句子匹配，分为两种，句子间有交互的和句子间无交互的
+* DRCN (Densely-connected Recurrent and Co-attentive neural Network)
+
+![](./pic/022.png)
+
+* Word Representation Layer
+
+  * word embedding ，同时考虑了可训练的词向量和固定的词向量
+  * character representation，CNN+max-pooling 随机初始化
+  * the exact match flag，两个句子是否有相同单词
+
+* Densely connected Recurrent Networks
+  $$
+  h_t^l = H_l(x_t^l,h_{t-1}^l),x_t^l=[h_t^{l-1},x_t^{l-1}]
+  $$
+
+  * 用x存储之前所有的隐藏状态
+
+* Densely-connected Co-attentive networks
+  $$
+  e_{i,j} = cos(h_{p_i},h_{q_j})
+  $$
+
+  $$
+  \alpha_{i,j} = \frac{exp(e_{i,j})}{\sum_{k=1}^Jexp(e_{i,k})} 
+  $$
+
+  $$
+  a_{p_i} = \sum_{j=1}^J\alpha_{i,j}h_{q_j}
+  $$
+
+  $$
+  h_t^l = H_l(x_t^l,h_{t-1}^l),x_t^l=[h_t^{l-1},a_t^{l-1},x_t^{l-1}]
+  $$
+
+* Bottleneck component
+
+  * Autoencoder 降维
+
+* Interaction and Prediction Layer
+  $$
+  v = [p;q;p+q;p-q;|p-q|]
+  $$
+
+* 
+
+
+
+---
+
+## [Embed2Detect: Temporally Clustered Embedded Words for Event Detection in Social Media](https://arxiv.org/pdf/2006.05908.pdf)(arxiv 2020)
+
+* A recent survey by Chaffey [[1]](Chaffey D (2019) Global social media research summary 2019 -- smart insights. https://www.smartinsights.com/social-media-marketing/social-media-strategy/new-global-social-media-research/[) estimated the number of active social media users around the world in January 2019 is 3.484 billion; 45% of the total population
+* Due to the diversity in social media users, it is common to use different terms and term sequences to describe the same idea
+* **Embed2Detect** considers all the important features in textual data; syntax, semantics and statistics, which are needed for effective event detection
+
+* it is clear to us that the majority of previous research works were mainly focused on
+  statistical features (e.g. term frequency, tf-idf, or burstiness), and syntactical features (e.g. co-occurrence, or local sensitivity) of text and documents
+* Considering the unpredictability associated with social media data it is not practical to identify the number of events in advance.
+
+---
+
+## [Dynamic Spatio-Temporal Tweet Mining for Event Detection: A Case Study of Hurricane Florence](https://link.springer.com/content/pdf/10.1007/s13753-020-00280-z.pdf)(IJDRS 2020)
+
+* 基于词频方法的缺点: The problem of these **frequency-based methods** is that they result in huge vectors for representing the tweets. They also neglect the effect of synonyms/antonyms, the context, and the semantics of the texts.They are not capable of modeling the abbreviations and misspelled words that are frequently used in tweets, 过于稀疏
+* 推特的基本处理: its text is transferred to lowercase, while URLs, special characters, and numbers are removed, the punctuation signs are deleted, and hashtags are replaced by their text. Then the text is tokenized, the words are corrected for repeating characters, the stop words are removed, and the words are lemmatized. Finally, the lemmatized words are joined together and represented as a cleaned tweet
+
+---
+
+## [MaTED: Metadata-Assisted Twitter Event Detection System](https://arxiv.org/pdf/2005.13751.pdf)(IPMU 2020)
+
+* 推特的流行程度: With over 1.3 billion users and about 500 million messages (called tweets) posted per day and over 15 billion API calls per day, Twitter provides a massive source to detect event occurrences as they happen.
+* 推特的文本特点: However, while analyzing language is as such challenging because of the inherent lack of structure in its expression, Twitter exacerbates this by supporting short message text, slang and emojis, user-created meta-information tags (hashtags), and URLs
+* 事件的定义: Topic Detection and Tracking (TDT) project [2] defines an event as “some unique thing that happens at some point in time”
+* 数据: event2012, 最终包括3800万推特数据, 127356事件相关
+
+---
+
+## [A French Corpus for Event Detection on Twitter](https://www.aclweb.org/anthology/2020.lrec-1.763.pdf)
+
+* 包括3800万法语推特, 其中13万有标签, 包含2018-07至2018-08共257事件, 15500新闻报道
+* 推特的文本特点: the specificities of Twitter (short texts, use of slang, abbreviations, hashtags, images and videos, very high volume of data) make all automatic detection tasks very difficult on tweet datasets.
+* event2012, 最后包含72790推特
+
+---
+
+## [Search Engine Meets Event Detection and Tracking](https://chiaki530.github.io/static/files/Search_Engine_Meets_Event_Detection_and_Tracking.pdf)（2019）
+
+* single-pass: A most prevailing method is the single-pass algorithm proposed by Yang et al.[17], where new-in articles are merged into an event or become a new event comparing its similarity with existing events against a threshold.
+* 将 tfidf 相似度和 doc2vec 相似度结合
+
+---
+
+## [Hot Event Detection for Social Media Based on Keyword Semantic Information](https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=8923874)(DSC 2019)
+
+* Specified events detection identifies events of particular types with prior information [10](T SakakiM OkazakiY Matsuo,"Earthquake shakes Twitter users: Realtime
+  event detection by social sensors," in Proceedings of the 19th
+  International Conference on World Wide Web, ACM, 2010, pp. 851860.[), [11](A Schulz, B Schmidt, T Strufe, "Small-scale incident detection based on microposts," in Proceedings of the 26th ACM Conference on Hypertext & Social Media. ACM, 2015, pp. 3-12.). 
+
+---
+
+## [Online Event Detection in Social Media with Bursty Event Recognition](https://link.springer.com/content/pdf/10.1007%2F978-981-15-0758-8_14.pdf)(SocialSec 2019)
+
+* Chen et al. [7] proposed a clustering-based approach using a similarity metric and low dimensional representations of events which were learned from a neural network with an attention mechanism.
+
+---
+
+## [Event Detection in Twitter Big Data by Virtual Backbone Deep Learning](https://link.springer.com/content/pdf/10.1007%2F978-3-030-33495-6_2.pdf)(2019 TopHPC)
+
+* Topic Model: The underlying assumption of the Topic modeling based approaches is that some hidden topics always can be seen in the tweets that are processed. Tweets are demonstrated as a combination of topics, and each topic has a probability distribution in the terms that are included in those tweets. The most used probabilistic topic model has been Latent Dirichlet Allocation (LDA) Blei et al. [8] in which the topic distribution has a Dirichlet prior.
 
 ---
 
