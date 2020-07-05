@@ -48,8 +48,8 @@
 
    * 与下标进行对比
    * 不修改数组找出重复的数字
-     * 逐一把原数组的数字复制到辅助数组中
-     * 类似二分法，判断值为1-m的数字数目是否大于m
+      * 逐一把原数组的数字复制到辅助数组中
+      * 类似二分法，判断值为1-m的数字数目是否大于m
 4. 二维数组中的查找
 
    * 选取数组右上角（左下角）的数字进行比较，删除所在列或行
@@ -196,6 +196,31 @@ class Solution:
 
 * 使用变量来跟踪进位，考虑两个数长短不一的情况，考虑两个数相加后位数大于原来的数的情况
 
+~~~python
+class Solution:
+    def addTwoNumbers(self, l1: ListNode, l2: ListNode) -> ListNode:
+        ad = 0
+        init = ListNode(0)
+        x = init
+        while(l1 or l2):
+            a = l1.val if l1 else 0
+            b = l2.val if l2 else 0
+            s = ad + a + b
+            num = s%10
+            
+            ad = 1 if s >= 10 else 0
+            init.next = ListNode(num)
+            init = init.next
+            l1 = l1.next if l1 else None
+            l2 = l2.next if l2 else None
+
+        if ad == 1:
+            init.next = ListNode(1)
+        return x.next
+~~~
+
+
+
 ### 3. 无重复字符的最长字串
 
 * 定义字符到索引的映射，当找到重复字符时，立即跳过该窗口，时间复杂度O(n),空间复杂度O(min(m,n))
@@ -290,6 +315,24 @@ class Solution:
 
 * 从左到右迭代s，将每个字符添加到合适的行
 
+~~~python
+class Solution:
+    def convert(self, s, numRows):
+        if len(s) <= numRows or numRows == 1:
+            return s
+        
+        res = ['' for i in range(numRows)]
+        i,flag = 0, 1
+        for c in s:
+            res[i] += c
+            if i == 0 or i == numRows - 1:
+                flag = -flag
+            i += flag
+        return ''.join(res)
+~~~
+
+
+
 ### 7.整数反转
 
 ### 8. 字符串转整数
@@ -299,29 +342,31 @@ class Solution:
     def myAtoi(self, str: str) -> int:
         if not str:
             return 0
-        while str and str[0] == ' ':
+        while str and str[0] == ' ':  # 去除前面的空格
             str = str[1:]
         if not str:
             return 0
         
-        if str[0] not in '0123456789+-':
+        if str[0] not in '0123456789+-':  # 判断合法性
             return 0
+        
         ab = 1
-        if str[0] == '-':
+        if str[0] == '-':  # 判断符号
             ab = -1
             str = str[1:]
         elif str[0] == '+':
             str = str[1:]
         else:
             str = str
+            
         x = ''
         for i in str:
-            if i in '0123456789':
+            if i in '0123456789':  # 获取数字
                 x += i
             else:
                 break
         if x:
-            res = int(x)*ab
+            res = int(x)*ab  # 判断溢出
             if res > 2**31-1:
                 return 2**31 - 1
             elif res < -2**31:
@@ -339,6 +384,19 @@ class Solution:
 * 将整数拆解，看是否回文
 
 ### 10. 正则表达式匹配
+
+~~~python
+class Solution:
+    def isMAtch(self, text, pattern):
+        if not pattern:
+            return not text
+        first_match = bool(text) and pattern[0] in {text[0],'.'}
+        if len(pattern) > 1 and pattern[1] == '*':
+            return self.isMatch(text,pattern[2:]) or first_match and self.isMatch(text[1:],pattern)
+        return first_match and self.isMatch(text[1:],pattern[1:])
+~~~
+
+
 
 ### 11. 盛水最多的容器
 
@@ -367,7 +425,34 @@ class Solution:
 
 ### 12. 整数转罗马数字
 
-* 贪心算法
+* 贪心算法，分情况讨论
+
+~~~python
+class Solution:
+    def intToRoman(self, num):
+        nums = [int(i) for i in str(num)[::-1]]
+        s_dic = {1:'I',2:'X',3:'C',4:'M'}
+        c_dic = {1:'V',2:'L',3:'D'}
+        
+        rel = []
+        for i,n in enumerate(nums):
+            if n == 0:
+                continue
+            elif 0 < n < 4:
+                rel.append(s_dic[i+1]*n)
+            elif n == 4:
+                rel.append(s_dic[i+1]+c_dic[i+1])
+            elif 4 < n < 9:
+                l = n%5
+                rel.append(c_dic[i+1]+s_dic[i+1]*l)
+            else:
+                rel.append(s_dic[i+1]+s_dic[i+2])
+        return ''.join(rel[::-1])
+        
+        
+~~~
+
+
 
 ### 13. 罗马数字转整数
 
@@ -377,17 +462,118 @@ class Solution:
 
 * 水平扫描
 
-### 15. 三树之和
+~~~python
+class Solution:
+    def judge(self,a,b):
+        if len(b) < len(a):
+            a, b = b, a
+        rel = ''
+        for i,x in enumerate(a):
+            if x != b[i]:
+                return b[:i]
+        return a
+        
+    def longestCommonPrefix(self,strs):
+        if len(strs) < 1:
+            return ''
+        ans = strs[0]
+        for s in strs[1:]:
+            ans = self.judge(ans,s)
+            if not ans:
+                return ans
+            
+        return ans
+~~~
+
+
+
+### 15. 三数之和
 
 * 先排序，再用两个指针寻找，跳过重复值
+
+~~~python
+class Solution:
+    def threeSum(nums):
+        nums.sort()
+        ans = []
+        for i,num in enumerate(nums[:-2]):
+            if i==0 or nums[i] > nums[i-1]:
+                l = i+1
+                r = len(nums) - 1
+                x = num + nums[l] + nums[r]
+                if x == 0:
+                    ans.append([num, nums[l], nums[r]])
+                    l += 1
+          			r -= 1
+                    while l < r and nums[l] == nums[l-1]:
+                        l += 1
+                    while l < r and nums[r] == nums[r+1]:
+                        r -= 1
+                elif x < 0:
+                    l += 1
+                else:
+                    r -= 1
+       return ans
+        
+~~~
+
+
 
 ### 16. 最接近的三数之和
 
 * 先排序，后用双指针
 
+~~~python
+class Solution:
+    def threeSunClosest(self, nums, target):
+        nums.sort()
+        temp = float('inf')
+        
+        for i,num in enumerate(nums[:-2]):
+            l = 0
+            r = len(nums)-1
+            while l < r:
+                x = num + nums[l] + nums[r] - target
+                if x == 0:
+                    return target
+                elif x < 0:
+                    l += 1
+                else:
+                    r -= 1
+                if abs(x) < temp:
+                    temp = abs(x)
+                    rel = x
+        return rel+target
+            
+            
+            
+~~~
+
+
+
 ### 17. 电话号码的字母组合
 
 * 回溯法
+
+~~~python
+class Solution:
+    def letterCombinations(self, digits):
+        if not digits:
+            return []
+        
+        dic = {'2':'abc','3':'def','4':'ghi','5':'jkl','6':'mno','7':'pqrs','8':'tuv','9':'wxyz'}
+        ans = []
+        for num in digit:
+            st = dic[num]
+            if not ans:
+                ans = [i for in st]
+            else:
+                ans = [i+j for i in ans for j in st]
+                
+        return ans
+~~~
+
+
 
 ### 18. 四数之和
 
@@ -397,9 +583,51 @@ class Solution:
 
 * 两个指针相差n，快的指针到达结尾时，慢的指针即为所求节点
 
+~~~python
+class Solution:
+    def removeNthFromEnd(self, head, n):
+        quick = head
+        slow = head
+        res = slow
+        
+        for i in range(n):
+            quick = quick.next
+        if not quick:
+            return head.next
+        while quick.next:
+            quick = quick.next
+            slow = slow.next
+        slow.next = slow.next.next
+        return res
+~~~
+
+
+
 ### 20. 有效的括号
 
 * 使用栈存储，配对成功弹出，最后栈为空则为有效
+
+~~~python
+class Solution:
+    def isValid(self, s: str) -> bool:
+        if not s:
+            return True
+        temp = []
+        dic = {')':'(','}':'{',']':'['}
+        for i in s:
+            if i in dic and temp and temp[-1]==dic[i]:
+                temp.pop()
+            elif i not in dic:
+                temp.append(i)
+            else:
+                return False
+        if temp != []:
+            return False
+        else:
+            return True
+~~~
+
+
 
 ### 21.合并两个有序链表
 
@@ -436,6 +664,25 @@ class Solution:
 ### 22. 括号生成
 
 * 回溯法
+
+~~~python
+class Solution():
+    def generateParenthesis(self, N):
+        ans = []
+        
+        def backtrack(s='',left=0, right=0):
+            if len(s)==2*N:
+                ans.append(s)
+                return
+            if left < N:
+                backtrack(s+'(',left+1,right)
+            if right < left:
+                backtrack(s+')',left,right+1)
+        backtrack()
+        return ans
+~~~
+
+
 
 ### 23. 合并k个排序链表
 
@@ -784,6 +1031,44 @@ class Solution:
 
 * 贪心算法，if (prices[i] > prices[i - 1])   maxprofit += prices[i] - prices[i - 1]
 
+### 124. 二叉树的最大路径和
+
+* 递归法
+
+~~~python
+class Solution:
+    def maxPathSum(self, root):
+        """
+        :type root: TreeNode
+        :rtype: int
+        """
+        def max_gain(node):
+            nonlocal max_sum
+            if not node:
+                return 0
+
+            # max sum on the left and right sub-trees of node
+            left_gain = max(max_gain(node.left), 0)
+            right_gain = max(max_gain(node.right), 0)
+            
+            # the price to start a new path where `node` is a highest node
+            price_newpath = node.val + left_gain + right_gain
+            
+            # update max_sum if it's better to start a new path
+            max_sum = max(max_sum, price_newpath)
+        
+            # for recursion :
+            # return the max gain if continue the same path
+            return node.val + max(left_gain, right_gain)
+   
+        max_sum = float('-inf')
+        max_gain(root)
+        return max_sum
+
+~~~
+
+
+
 ### 125. 验证回文串
 
 ### 127. 单词接龙
@@ -875,6 +1160,10 @@ class Solution(object):
 * 哈希表
 * 2 * sum(set(nums)) - sum(nums)
 * 位操作
+
+### 138. 复制带随机指针的链表
+
+* 
 
 ### 141. 环形链表
 
@@ -1061,6 +1350,38 @@ class Solution:
 ### 235. 二叉搜索树的最近公共祖先
 
 * 根据p、q的值判断所处位置
+
+~~~python
+class Solution:
+    def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -> 'TreeNode':
+        if p.val < root.val and q.val < root.val:
+            return self.lowestCommonAncestor(root.left, p, q)
+        if p.val > root.val and q.val > root.val:
+            return self.lowestCommonAncestor(root.right, p, q)
+
+        return root
+~~~
+
+### 236. 二叉树的公共祖先
+
+* 如果root就是p或q，则直接返回；用递归查找p和q的位置，如果p和q在同一边，则继续查找，否则返回root
+
+~~~python
+class Solution:
+    def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -> 'TreeNode':
+        if root in (None,p,q):
+            return root
+
+        L = self.lowestCommonAncestor(root.left,p,q)
+        R = self.lowestCommonAncestor(root.right,p,q)
+        if L == None:
+            return R
+        if R == None:
+            return L
+        return root
+~~~
+
+
 
 ### 237. 删除链表中的节点
 
@@ -1403,6 +1724,31 @@ class Solution:
         s = [i for i in s if i not in '()']
         return ''.join(s)
 ~~~
+
+### 1288. 删除被覆盖的区间
+
+* 合并区间
+
+~~~python
+class Solution:
+    def removeCoveredIntervals(self, intervals: List[List[int]]) -> int:
+        if not intervals:
+            return 0
+        intervals.sort()
+        ans = [intervals[0]]
+
+        for i in intervals[1:]:
+            if ans[-1][0] == i[0] and ans[-1][1] < i[1]:
+                ans[-1] = i
+            elif ans[-1][0] <= i[0] and ans[-1][1] >= i[1]:
+                continue
+            else:
+                ans.append(i)
+
+        return len(ans)
+~~~
+
+
 
 
 
