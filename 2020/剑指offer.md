@@ -704,18 +704,97 @@ class Solution():
 
 * 两个指针，遇到重复跳过
 
+~~~python
+class Solution:
+    def removeDuplicates(self, nums):
+        i = 0
+        for j in range(1,len(nums)):
+            if nums[j] != nums[i]:
+                i += 1
+                nums[i] = nums[j]
+        return i+1
+~~~
+
+
+
 ### 27. 移除元素
 
 * 同26，两个指针
+
+~~~python
+class Solutin:
+    def removeElement(self, nums, val):
+        i = 0
+        for j in range(1, len(nums)):
+            if nums[j] != val:
+                nums[i] = nums[j]
+                i += 1
+        return i
+~~~
+
+
 
 ### 28. 实现strStr()
 
 * 滑动窗口
 * 双指针
 
+~~~python
+class Solution:
+    def strStr(self, haystack, needle):
+        if not needle:
+            reutrn 0
+        if len(needle) > len(haystack):
+            return -1
+        
+        m, n = len(haystack), len(needle)
+        for i in range(m-n+1):  # m-n+1
+            if haystack[i:i+n] == needle:
+                return i
+        return -1
+~~~
+
+
+
 ### 29. 两数相除
 
 ### 30. 串联所有单词的字串
+
+~~~python
+class Solution:
+    def findSubstring(self, s, words):
+        if not s or not words:
+            return []
+        
+        len_s = len(s)
+        m = len(words)
+        n = len(words[0])
+        words_dic = {}
+        for word in words:
+            words_dic[word] = words_dic.get(word,0) + 1
+        ans = []
+        
+        for i in range(n):
+            count = 0
+            left = i
+            right = i
+            dic = {}
+            while right + n <= len_s:
+                w = s[right:right+n]
+                right += n
+                dic[w] = dic.get(w,0) + 1
+                count += 1
+                while dic[w] > words_dic.get(w,0):
+                    left_w = s[left:left+n]
+                    left += n
+                    dic[left_w] -= 1
+                    count -= 1
+                if count == m:
+                    ans.append(left)
+           return ans
+~~~
+
+
 
 ### 31. 下一个排列
 
