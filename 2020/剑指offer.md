@@ -828,6 +828,35 @@ class Solution:
 
 * 回溯算法+剪枝
 
+### 42. 接雨水
+
+* 双指针维护左右最大值，指针向中间移动的过程中进行计算
+
+~~~python
+class Solution:
+    def trap(self, height):
+        l, r = 0, len(height)
+        l_max, r_max = 0, 0
+        ans = 0
+        
+        while l < r:
+            if height[l] > height[r]:
+                if height[l] >= l_max:
+                    l_max = height[l]
+                else:
+                    ans += l_max - height[l]
+                l += 1
+            else:
+                if height[r] >= r_max:
+                    r_max = height[r]
+                else:
+                    ans += r_max - height[r]
+                r -= 1
+        return ans
+~~~
+
+
+
 ### 46. 全排列
 
 * 回溯法
@@ -901,6 +930,36 @@ class Solution:
 ### 58. 最后一个单词的长度
 
 * 从后向前遍历，从第一个不是空格的字符开始
+
+### 61. 旋转链表
+
+* 先遍历一遍得到链表长度，再遍历第二遍进行旋转
+
+~~~python
+class Solution:
+    def rotateRight(self, head, k):
+        if not head:
+            return None
+        
+        first = head
+        second = head
+        count = 0
+        
+        while first.next:
+            first = first.next
+            count += 1
+        first.next = head
+        
+        for i in range(count - k%count - 1):
+            second = second.next
+            
+        new_head = second.next
+        second.next = None
+        
+        return new_head
+~~~
+
+
 
 ### 66. 加一
 
