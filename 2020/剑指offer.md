@@ -250,35 +250,30 @@ class Solution:
 ~~~python
 class Solution:
     def findMedianSortedArrays(self, nums1: List[int], nums2: List[int]) -> float:
+        if len(nums1) > len(nums2):
+            nums1, nums2 = nums2, nums1
         m, n = len(nums1), len(nums2)
-        if m > n:
-            nums1, nums2, m, n = nums2, nums1, n, m
-        left_num = (m + n + 1)//2
-        i_min, i_max = 0, m
-        while i_min <= i_max:
-            i = (i_min + i_max)//2
-            j = left_num - i
-            if i > 0 and nums1[i-1] > nums2[j]:
-                i_max = i - 1
-            elif i < m and nums1[i] < nums2[j-1]:
-                i_min = i + 1
-            else:
-                if i == 0:
-                    left_max = nums2[j-1]
-                elif j == 0:
-                    left_max = nums1[i-1]
-                else:
-                    left_max = max(nums1[i-1],nums2[j-1])
+        left, right = 0, m
+        left_max, right_min = 0, 0
+        
+        while left <= right:
+            i = (left+right)//2
+            j = (m+n+1)//2 - i
             
-                if (m + n) % 2 == 1:
-                    return float(left_max)
-                if i == m:
-                    right_min = nums2[j]
-                elif j == n:
-                    right_min = nums1[i]
-                else:
-                    right_min = min(nums1[i],nums2[j])
-                return (left_max+right_min)/2
+            nums_im1 = -2**40 if i==0 else nums1[i-1]
+            nums_jm1 = -2**40 if j==0 else nums2[j-1]
+            nums_i = 2**40 if i==m else nums1[i]
+            nums_j = 2**40 if j==n else nums2[j]
+            
+            if nums_im1 <= nums_j:
+                left_max, right_min = max(nums_im1,nums_jm1), min(nums_i,nums_j)
+                left = i+1
+            else:
+                right = i-1
+                
+        if (m+n)%2==0:
+            return (left_max+right_min)/2
+        return left_max
 ~~~
 
 
