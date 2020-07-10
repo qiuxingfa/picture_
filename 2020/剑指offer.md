@@ -801,13 +801,86 @@ class Solution:
 
 * 二分查找，判断target在左边还是右边
 
+~~~python
+class Solution:
+    def search(self, nums, target):
+        n = len(nums)
+        l, r = 0, n-1
+        
+        while l <= r:
+            mid = (l+r)//2
+            if nums[mid] == target:
+                return mid
+            if nums[0] <= target:
+            	if nums[0] <= target < nums[mid]:
+                    r = mid - 1
+                else:
+                    l = mid + 1
+            else:
+                if nums[mid] < target <= nums[n-1]:
+                    l = mid + 1
+                else:
+                    r = mid - 1
+        return -1
+~~~
+
+
+
 ### 34. 在排序数组中查找元素的第一个和最后一个位置
 
 * 用二分法，先找左边界，再找找右边界
 
+~~~python
+class Solution:
+    def searchRange(self, nums, target):
+        res = [-1, -1]
+        if not nums:
+            return res
+        l, r = 0, len(nums)-1
+        while l < r:
+            mid = (l+r)//2
+            if nums[mid] >= target:
+                r = mid
+            else:
+                l = mid + 1
+        if nums[l] != target:
+            return res
+        while l < r:
+            mid = (l+r)//2
+            if nums[mid] <= target:
+                l = mid + 1
+            else:
+                r = mid
+        res[1] = l - 1
+        return res
+~~~
+
+
+
 ### 35.搜索插入位置
 
 * 二分查找
+
+~~~~python
+class Solution:
+    def searchInsert(self, nums, target):
+        if nums[0] >= target:
+            return 0
+        if nums[-1] < target:
+            return len(nums)
+        l, r = 0, len(nums)
+        while l < r:
+            mid = (l+r)//2
+            if nums[mid] == target:
+                return mid
+            if nums[mid] > target:
+                r = mid
+            else:
+                l = mid + 1
+        return l
+~~~~
+
+
 
 ### 36. 有效的数独
 
@@ -967,6 +1040,24 @@ class Solution:
 
 * 二分查找
 
+~~~python
+class Solution:
+    def mySqrt(self,x):
+        l, r = 0, x
+        ans = -1 
+        while l <= r:
+            mid = (l+r)//2
+            y = mid*mid
+            if y <= x:
+                l = mid + 1
+                ans = mid
+            else:
+                r = mid - 1
+        return ans
+~~~
+
+
+
 ### 70. 爬楼梯
 
 * 斐波那契数列，动态规划
@@ -974,6 +1065,31 @@ class Solution:
 $$
 dp[i] = dp[i-1] + dp[i-2]
 $$
+
+### 74. 搜索二维矩阵
+
+* 按一维矩阵二分法来计算
+
+~~~python
+class Solution:
+    def searchMartrix(self, matrix, target):
+        if not matrix:
+            return False
+        m = len(matrix)
+        n = len(matrix[0])
+        l, r = 0, m*n-1
+        while l <= r:
+            mid = (l+r)//2
+            if matrix[mid//n][mid%n] == target:
+                return True
+            if matrix[mid//n][mid%n] > target:
+                r = mid - 1
+            else:
+                l = mid + 1
+        return False
+~~~
+
+
 
 ### 83. 删除链表中的重复元素
 
