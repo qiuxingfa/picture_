@@ -811,7 +811,7 @@ class Solution:
             mid = (l+r)//2
             if nums[mid] == target:
                 return mid
-            if nums[0] <= target:
+            if nums[0] <= nums[mid]:
             	if nums[0] <= target < nums[mid]:
                     r = mid - 1
                 else:
@@ -1473,7 +1473,26 @@ class Solution:
 
 ### 148. 排序链表
 
-* 
+
+
+### 153. 寻找旋转排序数组中的最小值
+
+~~~python
+class Solution:
+    def findMin(self, nums):
+        n = len(nums)
+        l, r = 0, n-1
+        
+        while l < r:
+            mid = (l+r)//2
+            if nums[mid] < nums[r]:
+                r = mid
+            else:
+                l = mid + 1
+        return nums[l]
+~~~
+
+
 
 ### 155. 最小栈
 
