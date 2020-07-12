@@ -684,7 +684,39 @@ class Solution():
 * 遍历所有链表，将所有节点的值放入数组，排序，新建有序链表
 * 逐一比较
 * 逐一两两合并
-* 分治
+* 分治合并
+
+~~~python
+class Solution:
+    def mergeTwoLists(self, node1, node2):
+        if not node1:
+            return node2
+        if not node2:
+            return node1
+        
+        if node1.val < node2.val:
+            head = node1
+            head.next = self.mergeTwoLists(node1, node2.next)
+        else:
+            head = node2
+            head.next = self.mergeTwoLists(node1.next, node2)
+        return head
+    
+    def merge(self, lists, l, r):
+        if l > r:
+            return
+        if l == r:
+            return lists[l]
+        mid = (l+r)//2
+        l1 = self.merge(lists, l, mid)
+        l2 = self.merge(lists, mid+1, r)
+        return self.mergeTwoLists(l1, l2)
+    
+    def mergeKLists(self, lists):
+        return self.merge(lists, 0, len(lists)-1)
+~~~
+
+
 
 ### 24. 两两交换链表中的节点
 
@@ -975,6 +1007,22 @@ class Solution:
 * 分治
 
 ![](https://pic.leetcode-cn.com/3aa2128a7ddcf1123454a6e5364792490c5edff62674f3cfd9c81cb7b5e8e522-file_1576478143567)
+
+* 动态规划
+
+~~~python
+def Solution:
+    def maxSubArray(self, nums):
+        dp = [0]*len(nums)
+        dp[0] = nums[0]
+        ans = nums[0]
+        for i in range(1,len(nums)):
+            dp[i] = max(dp[i-1]+nums[i], nums[i])
+        	ans = max(ans, dp[i])
+        return ans
+~~~
+
+
 
 ### 56. 合并区间
 
@@ -1492,6 +1540,25 @@ class Solution:
         return nums[l]
 ~~~
 
+### 154. 寻找旋转排序数组中的最小值 II
+
+~~~python
+class Solution:
+    def findMin(self, nums):
+        n = len(nums)
+        l, r = 0, n-1
+        
+        while l < r:
+            mid = (l+r)//2
+            if nums[mid] < nums[r]:
+                r = mid
+            elif nums[mid] > nums[r]:
+                l = mid + 1
+            else:
+                r -= 1
+        return nums[l]
+~~~
+
 
 
 ### 155. 最小栈
@@ -1502,6 +1569,23 @@ class Solution:
 
 * 哈希表法：把A中每个结点的地址和应用存储在哈希表中
 * 双指针，pA到达链表的尾部时，将它重新定位到B的头节点，pB到达链表的尾部时，将它重新定位到A的头节点，若在某个时刻pA和pB相遇，则为相交结点
+
+### 162. 寻找峰值
+
+~~~python
+class Solution:
+    def findPeakElement(self, nums):
+        l, r = 0, len(nums)-1
+        while l < r:
+            mid = (l+r)//2
+            if nums[mid] > nums[mid+1]:
+                r = mid
+            else:
+                l = mid + 1  # 右边比mid高，所以mid一定不是峰值了
+        return l
+~~~
+
+
 
 ### 167. 两数之和 II - 输入有序数组
 
@@ -1592,6 +1676,21 @@ class Solution:
         return pre
 ~~~
 
+### 215. 数组中的第k个最大元素
+
+~~~python
+import heapq
+class Solution:
+    def findKthLargest(self, nums, k):
+        res = nums[:k]
+        heapq.heapify(res)
+        for num in nums[k:]:
+            if num > res[0]:
+                heapq.heappop(res)
+            	heapq.heappush(res, num)
+        return res[0]
+~~~
+
 
 
 ### 217. 存在重复元素
@@ -1654,6 +1753,27 @@ class Solution:
 ### 237. 删除链表中的节点
 
 * 把下一个节点复制到当前节点
+
+### 240. 搜索二位矩阵 II
+
+~~~python
+class Solution:
+    def searchMatrix(self, matrix, target):
+        if not matrix:
+            return False
+        m, n = len(matrix), len(matrix[0])
+        i, j = 0, n-1
+        while i < m and j >= 0:
+            if matrix[i][j] == target:
+                return True
+            if matrix[i][j] > target:
+                j -= 1
+            else:
+                i += 1
+        return False
+~~~
+
+
 
 ### 257. 二叉树的所有路径
 
