@@ -829,6 +829,26 @@ class Solution:
 
 ### 32. 最长的有效括号
 
+* 动态规划
+
+~~~python
+class Solution:
+    def longestValidParentheses(self, s):
+        if not s:
+            return 0
+        dp = [0]*len(s)
+        for i in range(1,len(s)):
+            if s[i] == ')':
+                pre = i - dp[i-1] - 1
+                if pre >= 0 and s[pre] == '(':
+                    dp[i] = dp[i-1] + 2
+                if pre > 0:
+                    dp[i] += dp[pre-1]
+        return max(dp)
+~~~
+
+
+
 ### 33. 搜索旋转排序数组
 
 * 二分查找，判断target在左边还是右边
