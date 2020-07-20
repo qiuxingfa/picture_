@@ -1116,6 +1116,46 @@ class Solution:
         return new_head
 ~~~
 
+### 62. 不同路径
+
+~~~python 
+class Solution:
+    def uniquePaths(self, m, n):
+        dp = [[0]*n for i in range(m)]
+        for i in range(m):
+            dp[i][0] = 1
+        for j in range(n):
+            dp[0][j] = 1
+        for i in range(1,m):
+            for j in range(1,n):
+                dp[i][j] = dp[i-1][j] + dp[i][j-1]
+        return dp[-1][-1]
+        
+~~~
+
+
+
+### 64. 最小路径和
+
+~~~python
+class Solution:
+    def minPathSum(self, grid: List[List[int]]) -> int:
+        m = len(grid)
+        n = len(grid[0])
+        dp = [[0]*n for i in range(m)]
+        dp[0][0] = grid[0][0]
+
+        for i in range(1,m):
+            dp[i][0] = dp[i-1][0] + grid[i][0]
+        for j in range(1,n):
+            dp[0][j] = dp[0][j-1] + grid[0][j]
+
+        for i in range(1,m):
+            for j in range(1,n):
+                dp[i][j] = min(dp[i-1][j],dp[i][j-1])+grid[i][j]
+        return dp[-1][-1]
+~~~
+
 
 
 ### 66. 加一
@@ -1155,6 +1195,43 @@ $$
 dp[i] = dp[i-1] + dp[i-2]
 $$
 
+~~~python
+class Solution:
+    def climbStairs(self, n: int) -> int:
+        if n == 1:
+            return 1
+        dp = [0]*n
+        dp[0],dp[1] = 1,2
+        for i in range(2,n):
+            dp[i] = dp[i-2]+dp[i-1]
+        return dp[-1]
+~~~
+
+### 72. 编辑距离
+
+~~~python
+class Solution:
+    def minDistanne(self,word1,word2):
+        m = len(word1)
+        n = len(word2)
+        
+        dp = [[0]*(n+1) for i in range(m+1)]
+        for i in range(m+1):
+            dp[i][0] = i
+        for j in range(n+1):
+            dp[0][j] = j
+        for i in range(1,m+1):
+            for j in range(1,n+1):
+                if word1[i-1]==word2[j-1]:
+                    v = 0
+                else:
+                    v = 1
+                dp[i][j] = min(dp[i-1][j]+1,dp[i][j-1]+1,dp[i-1][j-1]+v)
+        return dp[-1][-1]
+~~~
+
+
+
 ### 74. 搜索二维矩阵
 
 * 按一维矩阵二分法来计算
@@ -1181,6 +1258,48 @@ class Solution:
 
 
 ### 83. 删除链表中的重复元素
+
+### 85. 最大矩形
+
+~~~python
+class Solution:
+    def maximalRectangle(self,matrix):
+        if not matrix:
+            return 0
+        m = len(matrix)
+        n = len(matrix[0])
+        
+        h = [0]*n
+        l = [0]*n
+        r = [n]*n
+        ans = 0
+        cur_l,cur_r = 0,n
+        
+        for i in range(m):
+            for j in range(n):
+                if matrix[i][j] == '1':
+                    h[j] += 1
+                else:
+                    h[j] = 0
+            for j in range(n):
+                if matrix[i][j] == '1':
+                    l[j] = max(l[j],cur_l)
+                else:
+                    l[j] = 0
+                    cur_l = j-1
+            for j in range(n-1,-1,-1):
+                if matrix[i][j] == '1':
+                    r[j] = min(r[j],cur_r)
+                else:
+                    r[j] = n
+                    cur_r = j
+            for j in range(n):
+                if matrix[i][j] == '1':    
+                    ans = max(ans,h[j]*(r[j]-l[j]))
+        return ans
+~~~
+
+
 
 ### 88. 合并两个有序数组
 
