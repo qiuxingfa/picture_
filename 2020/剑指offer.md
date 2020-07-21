@@ -1334,6 +1334,54 @@ def reverse_node(head,m,n):
 
 ### 93. 复原IP地址
 
+### 95. 不同的二叉搜索树 II
+
+~~~python
+class Solution:
+    def generateTrees(self, n):
+        if n == 0:
+            return []
+        
+        def fun(l,r):
+            if l > r:
+                return [None]
+            
+            trees = []
+            for i in range(l,r+1):
+                left = fun(l,i-1)
+                right = fun(i+1,r)
+                
+                for li in left:
+                    for ri in right:
+                        cur = TreeNode(i)
+                        cur.left = li
+                        cur.right = ri
+                        trees.append(cur)
+            return trees
+        return fun(1,n)
+~~~
+
+### 97. 交错字符串
+
+~~~python
+class Solution:
+    def isInterleave(self,s1,s2,s3):
+        m, n, t = len(s1),len(s2), len(s3)
+        if m+n != t:
+            return False
+        dp = [[False]*(n+1) for i in range(m+1)]
+        dp[0][0] = True
+        for i in range(1, m+1):
+            dp[i][0] = dp[i-1] & (s1[i-1]==s3[i-1])
+        for j in range(1,n+1):
+            dp[0][j] = dp[j-1] & (s2[j-1]==s3[j-1])
+        for i in range(1,m+1):
+            for j in range(n+1):
+                dp[i][j] = (dp[i-1] & (s1[i-1]==s3[i-1])) or (dp[j-1] & (s2[j-1]==s3[j-1]))
+~~~
+
+
+
 ### 98. 验证二叉搜索树
 
 ~~~python
