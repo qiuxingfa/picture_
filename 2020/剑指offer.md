@@ -948,6 +948,50 @@ class Solution:
 
 * 回溯算法+剪枝
 
+~~~python
+class Solution:
+    def combinationSum(self,candidates,target):
+        candidates.sort()
+        n = len(candidates)
+        ans = []
+        def back(i,tmp_sum,tmp):
+            if tmp_sum > target or i==n:
+                return
+            if tmp_sum == target:
+                ans.append(tmp)
+                return
+            back(i,tmp_sum+candidates[i],tmp+[candidates[i]])
+            back(i+1,tmp_sum,tmp)
+        back(0,0,[])
+        return ans
+~~~
+
+### 40. 组合总和 II
+
+~~~python
+class Solution:
+    def combinationSum2(self, candidates,target):
+        candidates.sort()
+        n = len(candidates)
+        ans = []
+        def back(i,tmp_sum.tmp):
+            if tmp_sum > target:
+                return
+            if tmp_sum == target:
+                ans.append(tmp)
+                return
+            for j in range(i,n):
+                if tmp_sum+candidates[j] > target:
+                    break
+                if j>i and candidates[j] == candidates[j-1]:
+                    continue
+                back(j+1,tmp_sum+candidates[j],tmp+[candidates[j]])
+            back(0,0,[])
+            return ans
+~~~
+
+
+
 ### 42. 接雨水
 
 * 双指针维护左右最大值，指针向中间移动的过程中进行计算
@@ -982,6 +1026,7 @@ class Solution:
     def isMatch(self, s, p):
         m, n = len(s), len(p)
         dp = [[False]*(n+1) for i in range(m)]
+        dp[0][0] = True
         for i in range(1,n+1):
             if p[i-1] == '*':
                 dp[0][i] = True
@@ -1017,6 +1062,29 @@ class Solution:
         return res
 ~~~
 
+### 47. 全排列 II
+
+~~~python
+def class Solution:
+    def permuteUnique(self,nums):
+        nums.sort()
+        ans = []
+        
+        def back(nums,tmp):
+            if not nums:
+                ans.append(tmp)
+                return
+            for i in range(len(nums)):
+                if i>0 and nums[i]==nums[i-1]:
+                    continue
+                else:
+                    back(nums[:i]+nums[i+1:],tmp+[nums[i]])
+        back(nums,[])
+        return ans
+~~~
+
+
+
 ### 50. Pow(x,n)
 
 * 快速幂，递归
@@ -1038,6 +1106,31 @@ class Solution:
             x = 1/x
             n = -n
         return self.fun(x,n)
+~~~
+
+### 51. N皇后
+
+~~~python
+class Solution:
+    def solveNQueens(self,n):
+        ans = []
+        def valid(row,col,track):
+            if col in track:
+                return False
+            for k in range(row):
+                if row+col=k+track[k] or row-col=k-track[k]:
+                    return False
+            return True
+        
+        def back(row,track):
+            if row == n:
+                ans.append(track)
+                return 
+            for col in range(n):
+                if valid(row,col,track):
+                    back(row+1,track+[col])
+        back(0,[])
+        return [['.'*i+'Q'+'.'*(n-i-1) for i in l] for l in ans]
 ~~~
 
 
@@ -1087,6 +1180,29 @@ class Solution:
 ### 58. 最后一个单词的长度
 
 * 从后向前遍历，从第一个不是空格的字符开始
+
+### 60. 第k个排列
+
+~~~python
+class Solution:
+    def getPermutation(self,n,k):
+        facts, nums=[1],['1']
+        for i in range(1,n):
+            facts.append(facts[i-1]*i)
+            nums.append(str(i+1))
+            
+        k -= 1
+        ans = []
+        for i in range(n-1,-1,-1):
+            idx = k//facts[i]
+            k -= idx*facts[i]
+            ans.append(nums[idx])
+            del nums[idx]
+            
+        return ''.join(ans)
+~~~
+
+
 
 ### 61. 旋转链表
 
@@ -1252,6 +1368,71 @@ class Solution:
                 r = mid - 1
             else:
                 l = mid + 1
+        return False
+~~~
+
+### 77. 组合
+
+~~~python
+class Solution:
+    def combine(self,n,k):
+        ans = []
+        def back(i,tmp):
+            if len(tmp)==k:
+                ans.append(tmp[:])
+            for j in range(i,n+1):
+                tmp.append(j)
+                back(j+1,tmp)
+                tmp.pop()
+        back(1,[])
+        return ans
+    
+~~~
+
+### 78. 子集
+
+~~~python
+class Solution:
+    def subsets(self,nums):
+        ans = []
+        
+        def back(i,tmp,k):
+            if len(tmp) == k:
+                ans.append(tmp)
+            for j in range(i,len(nums)):
+                tmp.append(nums[j])
+                back(i+1,tmp,k)
+                tmp.pop()
+                
+        for k in range(len(nums)+1):
+            back(0,[],k)
+        return ans
+            
+~~~
+
+### 79. 单词搜索
+
+~~~python
+class Solution:
+    def exist(self,board,word):
+        def dfs(i,j,k):
+            if board[i][j] != word[k]:
+                return False
+            if k == len(word)-1:
+                return True
+            board[i][j] += ' '
+            for p,q in [[i,j-1],[i,j+1],[i-1,j],[i+1,j]]:
+                if 0<=p<m and 0<=q<n:
+                    if dfs(p,q,k+1):
+                        return True
+            board[i][j] = board[i][j][0]
+            return False
+        
+        m,n = len(board),len(board[0])
+        for i in range(m):
+            for j in range(n):
+                if dfs(i,j,0):
+                    return True
         return False
 ~~~
 
