@@ -1515,6 +1515,35 @@ def reverse_node(head,m,n):
 
 ### 93. 复原IP地址
 
+~~~python
+class Solution:
+    def restoreIpAddresses(self,s):
+        ans = []
+        
+        def back(s,tmp):
+            if len(s)==0 and len(tmp)==4:
+                ans.append('.'.join(tmp))
+                return
+            for i in range(min(3,len(s))):
+                p,q = s[:i+1],s[i+1:]
+                if p and 0<=int(p)<=255 and str(int(p))==p:
+                    back(q,tmp+[p])
+        back(s,[])
+        return ans
+~~~
+
+### 94. 二叉树的中序遍历
+
+~~~python
+class Solution:
+    def inorderTraversal(self,root):
+        if not root:
+            return []
+        return self.inorderTraversal(root.left)+[root.val]+self.inorderTraversal(root.right)
+~~~
+
+
+
 ### 95. 不同的二叉搜索树 II
 
 ~~~python
@@ -1594,6 +1623,22 @@ class Solution:
 ### 100. 相同的树
 
 * 递归
+
+~~~python
+class Solution:
+    def isSameTree(self,p,q):
+        if not p and not q:
+            return True
+        if not p or not q:
+            return False
+        
+        if p.val==q.val and self.isSameTree(p.left,q.left) and self.isSameTree(p.right,q.right):
+            return True
+        return False
+~~~
+
+
+
 * 迭代
 
 ### 101.对称二叉树
