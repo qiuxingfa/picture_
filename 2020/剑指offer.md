@@ -1646,6 +1646,79 @@ class Solution:
 * 递归，(t1.val == t2.val)&& isMirror(t1.right, t2.left)&& isMirror(t1.left, t2.right
 * 迭代，用队列判断，连续两个点应该时相等的，两个节点的左右子节点按相反的方向插入队列
 
+~~~python
+def Solution:
+    def isSymmetric(self,root):
+        if not root:
+            return True
+        
+        def fun(l,r):
+            if not l and not r:
+                return True
+            if not l or not r:
+                return False
+            return l.val==r.val and fun(l.left,r.right) and fun(l.right,r.left)
+        
+        return fun(root.left,root.right)
+~~~
+
+### 102.宽度优先
+
+~~~python
+class Solution:
+    def levelOrder(self,root):
+		if not root:
+            return []
+        ans = []
+        tmp = [root]
+        
+        while tmp:
+            r = []
+            for i in range(len(tmp)):
+                cur = tmp.pop(0)
+                r.append(cur.val)
+                if cur.left:
+                    tmp.apend(cur.left)
+                if cur.right:
+                    tmp.append(cur.right)
+            ans.append(r)
+        return ans
+~~~
+
+### 103. 二叉树的锯齿形层次遍历
+
+~~~python
+class Solution:
+    def zigzagLevelOrder(self, root):
+        if not root:
+            return []
+        ans = []
+        tmp = [root]
+        count = 0
+        
+        while tmp:
+            r = []
+            for i in range(len(tmp)):
+                cur = tmp.pop(0)
+                r.append(cur.val)
+                if count%2 == 0:
+                    if cur.left:
+                        tmp.append(cur.left)
+                    if cur.right:
+                        tmp.append(cur.right)
+                else:
+                    if cur.right:
+                        tmp.append(cur.right)
+                    if cur.left:
+                        tmp.append(cur.left)
+            ans.append(r)
+            tmp.reverse()
+            count += 1
+        return ans      
+~~~
+
+
+
 ### 104. 二叉树的最大深度
 
 * 递归（深度优先）
