@@ -1722,6 +1722,17 @@ class Solution:
 ### 104. 二叉树的最大深度
 
 * 递归（深度优先）
+
+~~~python
+class Solution:
+    def maxDepth(self,root):
+        if not root:
+            return 0
+        return max(self.maxDepth(root.left),self.maxDepth(root.right))+1
+~~~
+
+
+
 * 借用栈进行迭代
 
 ### 105. 从前序与中序遍历序列构造二叉树
@@ -1763,6 +1774,30 @@ class Solution:
 ### 107. 二叉树的层次遍历 II
 
 * 层序遍历后逆序
+
+~~~python
+class Solution:
+    def levelOrderBottom(self,root):
+        if not root:
+            return []
+        ans = []
+        tmp = [root]
+        
+        while tmp:
+            x = []
+            a = []
+            for r in tmp:
+                x.append(r.val)
+                if r.left:
+                    a.append(r.left)
+                if r.right:
+                    a.append(r.right)
+            ans.append(x)
+            tmp = a
+        return ans[::-1]              
+~~~
+
+
 
 ### 108. 将有序数组转换为二叉搜索树
 
@@ -1813,6 +1848,44 @@ class Solution:
 ### 110. 平衡二叉树
 
 * 自顶向下的递归，如果有一边子树不存在，则应该等于另一边的深度
+
+~~~python
+class Solution:
+    def isBalanced(self,root):
+        def fun(root):
+            if not root:
+                return 0
+            l = fun(root.left)
+            if l == -1:
+                return -1
+            r = fun(root.right)
+            if r == -1:
+                return -1
+            if abs(l-r)>1 :
+                return -1
+            return max(l,r)+1
+        return fun(root)!=-1
+~~~
+
+### 111. 二叉树的最小深度
+
+~~~python
+class Solution:
+    def minDepth(self,root):
+        if not root:
+            return 0
+        l,r = 0,0
+        if root.left:
+            l = self.minDepth(root.left)
+            
+        if root.right:
+            r = self.minDepth(root.right)
+        if not root.left or not root.right:
+            return l+r+1
+        return min(l,r)+1
+~~~
+
+
 
 ### 112. 路径总和
 
