@@ -607,19 +607,21 @@ class Solution:
     def isValid(self, s: str) -> bool:
         if not s:
             return True
-        temp = []
-        dic = {')':'(','}':'{',']':'['}
+
+        tmp = []
+        dic = {'}':'{',']':'[',')':'('}
+
         for i in s:
-            if i in dic and temp and temp[-1]==dic[i]:
-                temp.pop()
+            if i in dic and tmp and tmp[-1] == dic[i]:
+                tmp.pop()
             elif i not in dic:
-                temp.append(i)
+                tmp.append(i)
             else:
                 return False
-        if temp != []:
+
+        if tmp:
             return False
-        else:
-            return True
+        return True
 ~~~
 
 
@@ -743,7 +745,30 @@ class Solution:
 
 ### 25. k个一组翻转链表
 
-* 基本同24
+* 递归
+
+~~~python
+class Solution:
+    def self.reverseKGroup(self,head,k):
+        count = 0
+        cur = head
+        
+        while cur and count != k:
+            count += 1
+            cur = cur.next
+            
+        if count == k:
+            cur = self.reverseKGroup(cur,k)
+            for i in range(k):
+                tmp = cur.next
+                head.next = cur
+                cur = head
+                head = tmp
+        	head = cur
+        return head 
+~~~
+
+
 
 ### 26. 删除排序数组的重复项
 
@@ -1017,12 +1042,12 @@ class Solution:
 ~~~python
 class Solution:
     def trap(self, height):
-        l, r = 0, len(height)
+        l, r = 0, len(height)-1
         l_max, r_max = 0, 0
         ans = 0
         
         while l < r:
-            if height[l] > height[r]:
+            if height[l] < height[r]:
                 if height[l] >= l_max:
                     l_max = height[l]
                 else:
@@ -1234,7 +1259,7 @@ class Solution:
         
         first = head
         second = head
-        count = 0
+        count = 1
         
         while first.next:
             first = first.next
@@ -1340,6 +1365,23 @@ class Solution:
             dp[i] = dp[i-2]+dp[i-1]
         return dp[-1]
 ~~~
+
+### 71. 简化路径
+
+~~~python
+class Solution:
+    def simplifyPath(self,path)
+        tmp = []
+        for i in path.split('/'):
+            if i not in ['','.','..']:
+                tmp.append(i)
+            elif i == '..':
+                tmp.pop()
+                
+        return '/'+'/'.join(tmp)
+~~~
+
+
 
 ### 72. 编辑距离
 
@@ -1454,9 +1496,47 @@ class Solution:
         return False
 ~~~
 
+### 82. 删除排序链表中的重复元素
+
+~~~python
+class Solution:
+    def deleteDuplicates(self,head):
+        first = ListNode(0)
+        first.next = head
+        
+        pre,cur = first,head
+        while cur:
+            while cur.next and cur.val==cur.next.val:
+                cur = cur.next
+            if pre.next == cur:
+                pre = pre.next
+            else:
+                pre.next = cur.next
+            
+            cur = cur.next
+        return first.next
+~~~
+
 
 
 ### 83. 删除链表中的重复元素
+
+~~~python
+class Solution:
+    def deleteDuplicates(self,head):
+        if not head and not head.next:
+            return head
+        pre,cur = head,head.next
+        while cur:
+            if pre.val == cur.val:
+                pre.next = cur.next
+            else:
+                pre = pre.next
+            cur = cur.next
+        return head
+~~~
+
+
 
 ### 85. 最大矩形
 
@@ -1496,6 +1576,30 @@ class Solution:
                 if matrix[i][j] == '1':    
                     ans = max(ans,h[j]*(r[j]-l[j]))
         return ans
+~~~
+
+### 86. 分隔链表
+
+~~~python
+class Solution:
+    def partition(self,head,x):
+        if not head:
+            return head
+        l = ListNode(0)
+        r = ListNode(0)
+        node1 = l
+        node2 = r
+        
+        while head:
+            if head.val < x:
+                node1.next = ListNode(head.val)
+                node1.next = node1
+            else:
+                node2.next = ListNode(head.val)
+                node2.next = node2
+            head = head.next
+        node1.next = r.next
+        return l.next
 ~~~
 
 
