@@ -696,10 +696,10 @@ class Solution:
         
         if node1.val < node2.val:
             head = node1
-            head.next = self.mergeTwoLists(node1, node2.next)
+            head.next = self.mergeTwoLists(node1.next, node2)
         else:
             head = node2
-            head.next = self.mergeTwoLists(node1.next, node2)
+            head.next = self.mergeTwoLists(node1, node2.next)
         return head
     
     def merge(self, lists, l, r):
@@ -722,6 +722,24 @@ class Solution:
 
 * 递归
 * 迭代，三指针
+
+~~~python
+class Solution:
+    def swapPairs(self,head):
+        start = ListNode(0)
+        start.next = head
+        pre = start
+        
+        while pre.next and pre.next.next:
+            cur = pre.next
+            pre.next = cur.next
+            cur.next = cur.next.next
+            pre.next.next = cur
+            pre = cur
+        return start.next
+~~~
+
+
 
 ### 25. k个一组翻转链表
 
