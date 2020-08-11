@@ -1536,6 +1536,33 @@ class Solution:
         return head
 ~~~
 
+### 84. 柱状图中最大的矩形
+
+用两个列表存储左右边界，用栈存储状态
+
+~~~python
+class Solution:
+    def largestRectangleArea(self,heights):
+        n = len(heights)
+        left = [0]*n
+        right = [n]*n
+        stack = []
+        
+        for i in range(n):
+            while stack and heights[stack[-1]]>=heights[i]:
+                right[stack[-1]] = i
+                stack.pop()
+            if stack:
+                left[i] = stack[-1]
+            else:
+                left[i] = -1
+        if n!=0:
+            ans = max([(right[i]-left[i]-1)*height[i] for i in range(n)])
+        else:
+            ans = 0
+        return ans
+~~~
+
 
 
 ### 85. 最大矩形
