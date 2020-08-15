@@ -1579,9 +1579,9 @@ class Solution:
         l = [0]*n
         r = [n]*n
         ans = 0
-        cur_l,cur_r = 0,n
         
         for i in range(m):
+            cur_l,cur_r = 0,n
             for j in range(n):
                 if matrix[i][j] == '1':
                     h[j] += 1
@@ -1592,7 +1592,7 @@ class Solution:
                     l[j] = max(l[j],cur_l)
                 else:
                     l[j] = 0
-                    cur_l = j-1
+                    cur_l = j+1
             for j in range(n-1,-1,-1):
                 if matrix[i][j] == '1':
                     r[j] = min(r[j],cur_r)
@@ -2040,6 +2040,18 @@ class Solution:
 
 * 递归
 
+### 114. 二叉树的前序遍历
+
+~~~python
+class Solution:
+    def preorderTraversal(self,root):
+        if not root:
+            return []
+        return [root.val] + self.preorderTraversal(root.left)+self.preorderTraversal(root.right)
+~~~
+
+
+
 ### 118. 杨辉三角
 
 * 动态规划
@@ -2244,6 +2256,26 @@ class Solution:
             ss = ss.next
 
         return ss
+~~~
+
+### 145. 二叉树的后序遍历
+
+~~~python
+class Solution:
+    def postorderTraversal(self,root):
+        if not root:
+            return []
+        tmp = [root]
+        ans = []
+        while tmp:
+            node = tmp.pop()
+            ans.append(node.val)
+            if node.left:
+                tmp.append(node.left)
+            if node.right:
+                tmp.append(node.right)
+                
+        return ans[::-1]
 ~~~
 
 
