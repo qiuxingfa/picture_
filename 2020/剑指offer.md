@@ -749,7 +749,7 @@ class Solution:
 
 ~~~python
 class Solution:
-    def self.reverseKGroup(self,head,k):
+    def reverseKGroup(self,head,k):
         count = 0
         cur = head
         
@@ -846,8 +846,7 @@ class Solution:
         
         for i in range(n):
             count = 0
-            left = i
-            right = i
+            left,right = i,i
             dic = {}
             while right + n <= len_s:
                 w = s[right:right+n]
@@ -940,6 +939,7 @@ class Solution:
                 l = mid + 1
         if nums[l] != target:
             return res
+        res[0] = l
         while l < r:
             mid = (l+r)//2
             if nums[mid] <= target:
@@ -987,7 +987,7 @@ class Solution:
 
 ### 38. 外观数列
 
-### 39. 组合总和
+### 39. 组合总和(数字不可重复选取)
 
 * 回溯算法+剪枝
 
