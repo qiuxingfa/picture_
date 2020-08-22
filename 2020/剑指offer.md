@@ -2075,34 +2075,30 @@ class Solution:
 
 ~~~python
 class Solution:
-    def maxPathSum(self, root):
-        """
-        :type root: TreeNode
-        :rtype: int
-        """
-        def max_gain(node):
-            nonlocal max_sum
+    def __init__(self):
+        self.maxSum = float("-inf")
+
+    def maxPathSum(self, root: TreeNode) -> int:
+        def maxGain(node):
             if not node:
                 return 0
 
-            # max sum on the left and right sub-trees of node
-            left_gain = max(max_gain(node.left), 0)
-            right_gain = max(max_gain(node.right), 0)
+            # 递归计算左右子节点的最大贡献值
+            # 只有在最大贡献值大于 0 时，才会选取对应子节点
+            leftGain = max(maxGain(node.left), 0)
+            rightGain = max(maxGain(node.right), 0)
             
-            # the price to start a new path where `node` is a highest node
-            price_newpath = node.val + left_gain + right_gain
+            # 节点的最大路径和取决于该节点的值与该节点的左右子节点的最大贡献值
+            priceNewpath = node.val + leftGain + rightGain
             
-            # update max_sum if it's better to start a new path
-            max_sum = max(max_sum, price_newpath)
+            # 更新答案
+            self.maxSum = max(self.maxSum, priceNewpath)
         
-            # for recursion :
-            # return the max gain if continue the same path
-            return node.val + max(left_gain, right_gain)
+            # 返回节点的最大贡献值
+            return node.val + max(leftGain, rightGain)
    
-        max_sum = float('-inf')
-        max_gain(root)
-        return max_sum
-
+        maxGain(root)
+        return self.maxSum
 ~~~
 
 
