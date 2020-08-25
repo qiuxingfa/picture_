@@ -2565,6 +2565,41 @@ class Solution:
         return max(dp)
 ~~~
 
+### 316. 去除重复字母
+
+~~~python
+def Solution:
+    def removeDuplicateLetters(s):
+        stack = []
+        seen = set()
+        last_occurrence = {c:i for i ,c in enumerate(s)}
+        
+        for i,c in enumerate(s):
+            if c not in seen:
+                while stack and c<stack[-1] and i<last_occurrence[stack[-1]]:
+                    seen.discard(stack.pop())
+                seen.add(c)
+                stack.append(c)
+        return ''.join(stack)
+~~~
+
+### 331. 验证二叉树的前序序列化
+
+~~~python
+class Solution:
+    def isValidSerialization(self,preorder):
+        nodes = preorder.split(',')
+        degree = 1
+        for node in nodes:
+            if degree == 0:
+                return False
+            if node == '#':
+                degree -= 1
+            else:
+                degree += 1
+        return degree == 0
+~~~
+
 
 
 ### 345. 反转字符串中的元音字母
@@ -2590,7 +2625,52 @@ class Solution:
 
 ### 389. 找不同
 
+### 394. 字符串编码
+
+~~~python
+class Solution:
+    def decodeString(self,s):
+        stack = []
+        num = 0
+        res = ''
+        for c in s:
+            if c.isdigit():
+                num = num*10+int(c)
+            elif c == '[':
+                stack.append((res,num))
+                res,num = '',0
+            elif c == ']':
+                top = stack.pop()
+                res = top[0]+res*top[1]
+            else:
+                res += c
+        return res
+~~~
+
+
+
 ### 401. 二进制手表
+
+### 402. 移掉K位数字
+
+~~~python
+class Solution:
+    def removeKdigits(self,num,k):
+        if k==len(num):
+            return '0'
+        tmp = []
+        count = 0
+        for i in range(len(num)):
+            while tmp and tmp[-1]>num[i] and count<k:
+                tmp.pop()
+                count += 1
+            tmp.append(num[i])
+        tmp = tmp[:len(num)-k]
+        ans = ''.join(tmp)
+        return str(int(ans))
+~~~
+
+
 
 ### 405. 数字转换为十六进制数
 
