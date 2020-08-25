@@ -2372,6 +2372,31 @@ $$
 f(k) = max(f(k-2)+A_k,f(k-1))
 $$
 
+### 199. 二叉树的右视图
+
+~~~python
+class Solution:
+    def rightSideView(self,root):
+        if not root:
+            return []
+        q = [root]
+        ans = []
+        
+        while q:
+            ans.append(q[-1].val)
+            tmp = []
+            for i in range(len(q)):
+                node = q.pop(0)
+                if node.left:
+                    tmp.append(node.left)
+                if node.right:
+                    tmp.append(node.right)
+            q = tmp
+        return ans
+~~~
+
+
+
 ### 200. 岛屿数量
 
 ~~~python
@@ -2582,6 +2607,25 @@ def Solution:
                 stack.append(c)
         return ''.join(stack)
 ~~~
+
+### 322. 零钱兑换
+
+* 时间复杂度O(Sn)，对于每个状态，要枚举n个面额来转移状态
+
+~~~python
+class Solution:
+    def coinChange(self,coins,amount):
+        dp = [float('inf')]*(amount+1)
+        dp[0] = 0
+        for coin in coins:
+            for x in range(coin,amount+1):
+                dp[x] = min(dp[x],dp[x-coin]+1)
+        if dp[-1] == float('inf'):
+            return -1
+        return dp[-1]
+~~~
+
+
 
 ### 331. 验证二叉树的前序序列化
 
