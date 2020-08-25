@@ -3087,7 +3087,23 @@ class Solution:
         return left <= k <= right
 ~~~
 
+### 快手 距离N最近的斐波那契数
 
+~~~python
+def close_fib(n):
+    fb0 = 0
+    fb1 = 1
+    while True:
+        if n<fb1:
+            left = n-fb0
+            right = fb1-n
+            if left<right:
+                return fb0
+            else:
+                return fb1
+        tmp = fb0+fb1
+        fb0,fb1 = fb1,tmp
+~~~
 
 
 
