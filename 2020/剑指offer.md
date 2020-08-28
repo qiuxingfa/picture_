@@ -2809,6 +2809,31 @@ class Solution:
 
 ### 541. 反转字符串 II
 
+### 542. 01矩阵
+
+~~~python
+class Solution:
+    def updateMatrix(self, matrix: List[List[int]]) -> List[List[int]]:
+        m, n = len(matrix), len(matrix[0])
+        dp = [[0] * n for _ in range(m)]
+        q = [(i, j) for i in range(m) for j in range(n) if matrix[i][j] == 0]
+        # 将所有的 0 添加进初始队列中    
+        seen = set(q)
+
+        # 广度优先搜索
+        while q:
+            i, j = q.pop(0)
+            for ni, nj in [(i - 1, j), (i + 1, j), (i, j - 1), (i, j + 1)]:
+                if 0 <= ni < m and 0 <= nj < n and (ni, nj) not in seen:
+                    dp[ni][nj] = dp[i][j] + 1
+                    q.append((ni, nj))
+                    seen.add((ni, nj))
+        
+        return dp
+~~~
+
+
+
 ### 543.二叉树的直径
 
 * 深度优先搜索，定义递归函数depth计算子树深度，子树深度为max(L, R) + 1，最大节点数为 L + R + 1
