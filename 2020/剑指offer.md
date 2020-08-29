@@ -2040,6 +2040,55 @@ class Solution:
 
 * 递归
 
+### 113. 路径总和 II
+
+* 给定二叉树和目标和，找到所有从根节点到叶子节点路径总和等于给定目标的路径
+
+
+
+~~~python
+# DFS
+class Solution:
+    def pathSum(self,root,sum):
+        ans = []
+        def dfs(root,sum,tmp):
+            if not root:
+                return
+            sum -= root.val
+            if not root.left and not root.right and sum==0:
+                ans.append(tmp+[root.val])
+            dfs(root.left,sum,tmp+[root.val])
+            dfs(root.right,sum,tmp+[root.val])
+        dfs(root,sum,[])
+        return ans
+
+
+
+
+################################## 
+# BFS 
+
+class Solution:
+    def pathSum(self, root: TreeNode, sum_: int) -> List[List[int]]:
+        if not root:
+            return []
+        
+        stack = [(root, [root.val])]
+        res = list()
+        while stack:
+            node, tmp = stack.pop(0)
+            if not node.left and not node.right and sum(tmp) == sum_:
+                res.append(tmp)
+            if node.left:
+                stack.append((node.left,tmp+[node.left.val]))
+            if node.right:
+                stack.append((node.right,tmp+[node.right.val]))
+        
+        return res
+~~~
+
+
+
 ### 114. 二叉树的前序遍历
 
 ~~~python
@@ -2484,7 +2533,74 @@ class Solution:
 ### 226. 翻转二叉树
 
 * 递归
+
+~~~python
+class Solution:
+    def invertTree(self,root):
+        if not root:
+            return None
+        root.left,root.right = root.right,root.left
+        self.invertTree(root.left)
+        self.invertTree(root.right)
+        return root
+~~~
+
 * 迭代
+
+~~~python
+class Solution:
+    def invertTree(self.root):
+        if not root:
+            return None
+        q = [root]
+        while queue:
+            tmp = q.pop(0)
+            tmp.left,tmp.right = tmp.right,tmp.left
+            if tmp.left:
+                q.append(tmp.left)
+            if tmp.right:
+                q.append(tmp.right)
+        return root
+~~~
+
+
+
+### 230. 二叉搜索树中第K小的元素
+
+* 二叉搜索树的中序遍历是一个递增数列
+
+~~~python
+class Solution:
+    def kthSmallest(self,root,k):
+        def inorder(r):
+            if not r:
+                return []
+            return inorder(r.left)+[r.val]+inorder(r.right)
+        return inorder(root)[k-1]
+    
+
+# 迭代
+class Solution:
+    def kthSmallest(self, root, k):
+        """
+        :type root: TreeNode
+        :type k: int
+        :rtype: int
+        """
+        stack = []
+        
+        while True:
+            while root:
+                stack.append(root)
+                root = root.left
+            root = stack.pop()
+            k -= 1
+            if not k:
+                return root.val
+            root = root.right
+~~~
+
+
 
 ### 231. 2的幂
 
@@ -3040,6 +3156,24 @@ class Solution:
         return ''.join(s)
 ~~~
 
+### 946. 验证栈序列
+
+~~~python
+class Solution:
+    def validateStacjSequences(self,pushed,popped):
+        j = 0
+        stack = []
+        
+        for x in pushed:
+            stack.append(x)
+            while stack and j<len(popped) and stack[-1]==popped[j]:
+                stack.pop()
+                j+=1
+        return j==len(popped)
+~~~
+
+
+
 ### 1190. 反转每对括号间的字串
 
 * 用栈保存左括号，遇到右括号时弹出
@@ -3096,6 +3230,28 @@ class Solution:
 
 ### 1332. 删除回文子序列
 
+### 1339. 分裂二叉树的最大乘积
+
+* 遍历求各子树和，最后分别计算其与剩下的树和的乘积，取最大值
+
+~~~python
+class Solution:
+    def maxProduct(self,root):
+        list_sum = []
+        def dfs(node):
+            if not node:
+                return 0
+            s = dfs(node.left)+dfs(node.right)+node.val
+            list_sum.append(s)
+            return s
+        
+        total = dfs(root)
+        ans = float('-inf')
+        for s in list_sum:
+            ans = max(ans,s*(total-s))
+        return ans%(10**9+7)
+~~~
+
 ### 1400. 构造K个回文字符串
 
 ~~~python
@@ -3128,6 +3284,29 @@ def close_fib(n):
                 return fb1
         tmp = fb0+fb1
         fb0,fb1 = fb1,tmp
+~~~
+
+### 腾讯 找出数组中比左边大比右边的小的元素
+
+* 用一个数组记录扫描到当前位置时,该元素前面的最大元素,再用一个数组记录,扫描到当前位置时,该元素后面的最小元素.最后用,当前位置的元素和扫描到当前位置时该元素前面的最大元素值,扫描到当前位置时该元素后面的最小元素值和它进行比较就可以得到一个boolean类型的数组，用来记录当前位置上的元素是否满足条件
+
+~~~python
+def fun(arr):
+    max_arr = [i for i in arr]
+    min_arr = [i for i in arr]
+    
+    for i in range(1,len(arr)):
+        if max_arr[i] < max_arr[i-1]:
+            max_arr[i] = max_arr[i-1]
+    for i in range(len(arr)-2,-1,-1):
+        if min_arr[i] > min_arr[i+1]:
+            min_arr[i] = min_arr[i+1]
+            
+    ans = []
+    for i in range(len(arr)):
+        if arr[i]>=max_arr[i] and arr[i]<=min_arr[i]:
+            ans.append(arr[i])
+    return ans
 ~~~
 
 
