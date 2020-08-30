@@ -2329,6 +2329,34 @@ class Solution:
 
 
 
+### 151. 翻转字符串里的单词
+
+~~~python
+class Solution:
+    def reverseWords(self,s):
+        left,right = 0,len(s)-1
+        while left<=right and s[left]==' ':
+            left += 1
+        while left<=right and s[right]==' ':
+            right -= 1
+        d = []
+        word = ''
+        while left<=right:
+            if s[left]==' ' and word:
+                d = [word] + d
+                word = ''
+            elif s[left]!=' ':
+                word += s[left]
+            left += 1
+        d = [word]+d
+        
+        return ' '.join(d)
+~~~
+
+
+
+
+
 ### 153. 寻找旋转排序数组中的最小值
 
 ~~~python
@@ -3177,7 +3205,34 @@ class Solution:
 ### 1095. 山脉数组中查找目标值
 
 ~~~python
-
+class Solution:
+    def binary_search(arr,target,l,r):
+        while l<=r:
+            mid = (l+r)//2
+            if arr[mid] == target:
+                return mid
+            if arr[mid] < target:
+                l = mid+1
+            else:
+                r = mid-1
+        return -1
+    
+    def findInMountainArray(self,target,mountain_arr):
+        l,r = 0,len(mountain_arr)-1
+        while l<r:
+            mid = (l+r)//2
+            if mountain_arr[mid] < mountain_arr[mid+1]:
+                l = mid+1
+            else:
+                r = mid
+        peak = l
+        
+        index = binary_search(mointain_arr,target,0,peak)
+        if index!=-1:
+            return index
+        mountain_arr = [-i for i in mountain_arr]
+        index = binary_search(mountain_arr,-target,peak+1,len(mountain_arr)-1)
+        return index
 ~~~
 
 
