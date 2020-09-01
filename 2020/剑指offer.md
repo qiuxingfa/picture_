@@ -1720,6 +1720,22 @@ class Solution:
         return fun(1,n)
 ~~~
 
+### 96. 不同的二叉搜索树
+
+~~~python
+class Solution:
+    def numTrees(self,n):
+        dp = [0]*(n+1)
+        dp[0],dp[1] = 1,1
+        
+        for i in range(2,n+1):
+            for j in range(1,i+1):
+                dp[i] += dp[j-1]*dp[i-j]
+        return dp[-1]
+~~~
+
+
+
 ### 97. 交错字符串
 
 ~~~python
