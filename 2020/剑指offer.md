@@ -3420,5 +3420,21 @@ def fun(arr):
     return ans
 ~~~
 
+### 1-5的随机数产生1-7的随机数
 
+~~~python
+def random7():
+    x = 5*(random5()-1)+random5()-1 # 产生0-24随机数
+    if x > 21:
+        return random7()
+    return x//3
+~~~
+
+### 洗牌算法
+
+~~~python
+for i in range(N-1,-1,-1):
+    x = rand(i)
+    arr[i],arr[x] = arr[x],arr[i]
+~~~
 
