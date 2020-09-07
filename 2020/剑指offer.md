@@ -760,7 +760,7 @@ class Solution:
         if count == k:
             cur = self.reverseKGroup(cur,k)
             for i in range(k):
-                tmp = cur.next
+                tmp = head.next
                 head.next = cur
                 cur = head
                 head = tmp
@@ -2302,18 +2302,13 @@ class Solution:
     def hasCycle(self, head: ListNode) -> bool:
         if not head:
             return False
-        if not head.next:
-            return False
-
-        fast = head.next
-        slow = head
-
-        while slow != fast:
-            if not fast or not fast.next:
-                return False
+        slow,fast = head,head
+        while fast and fast.next:
             fast = fast.next.next
             slow = slow.next
-        return True
+            if fast == slow:
+                return True
+        return False
 ~~~
 
 ### 142. 环形链表 II
@@ -2448,6 +2443,24 @@ class Solution:
 
 * 哈希表法：把A中每个结点的地址和应用存储在哈希表中
 * 双指针，pA到达链表的尾部时，将它重新定位到B的头节点，pB到达链表的尾部时，将它重新定位到A的头节点，若在某个时刻pA和pB相遇，则为相交结点
+
+~~~python
+class Solution:
+    def getIntersectionNode(self,headA,headB):
+        p,q = headA,headB
+        while p!= q:
+            if p:
+                p = p.next
+            else:
+                p = headB
+            if q:
+                q = q.next
+            else:
+                q = headA
+        return p
+~~~
+
+
 
 ### 162. 寻找峰值
 
@@ -2593,6 +2606,32 @@ class Solution:
                 heapq.heappop(res)
             	heapq.heappush(res, num)
         return res[0]
+    
+    
+###########################
+def topk(nums,k):
+    def partition(left,right):
+        tmp = left
+        i,j = left+1,right
+        while i<=j:
+            if nums[i]<nums[tmp] and nums[j]>nums[tmp]:
+                nums[i],nums[j] = nums[j],nums[i]
+            if nums[i] >= nums[tmp]:
+                i += 1
+            if nums[j] <= nums[tmp]:
+                j -= 1
+        nums[j],nums[tmp] = nums[tmp],nums[j]
+        return j
+    
+    left,right = 0,len(nums)-1
+    while True:
+        index = partition(left,right)
+        if index == k-1:
+            return a[index]
+        if index < k-1:
+            left = index + 1
+        else:
+            right = index - 1
 ~~~
 
 
