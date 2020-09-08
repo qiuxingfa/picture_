@@ -495,20 +495,21 @@ class Solution:
             if i==0 or nums[i] > nums[i-1]:
                 l = i+1
                 r = len(nums) - 1
-                x = num + nums[l] + nums[r]
-                if x == 0:
-                    ans.append([num, nums[l], nums[r]])
-                    l += 1
-          			r -= 1
-                    while l < r and nums[l] == nums[l-1]:
+                while l<r:
+                    x = num + nums[l] + nums[r]
+                    if x == 0:
+                        ans.append([num, nums[l], nums[r]])
                         l += 1
-                    while l < r and nums[r] == nums[r+1]:
                         r -= 1
-                elif x < 0:
-                    l += 1
-                else:
-                    r -= 1
-       return ans
+                        while l < r and nums[l] == nums[l-1]:
+                            l += 1
+                        while l < r and nums[r] == nums[r+1]:
+                            r -= 1
+                    elif x < 0:
+                        l += 1
+                    else:
+                        r -= 1
+           return ans
         
 ~~~
 
@@ -884,8 +885,8 @@ class Solution:
                 pre = i - dp[i-1] - 1
                 if pre >= 0 and s[pre] == '(':
                     dp[i] = dp[i-1] + 2
-                if pre > 0:
-                    dp[i] += dp[pre-1]
+                	if pre > 0:
+                    	dp[i] += dp[pre-1]
         return max(dp)
 ~~~
 
@@ -2159,6 +2160,21 @@ class Solution:
 
 * 遍历一遍数组，维护两个变量，截至当前的历史最低价和截至当前的最大利润
 
+~~~python
+class Solution:
+    def maxProfit(self,prices):
+        if len(prices)<2:
+            return 0
+        lmin = prices[0]
+        lmax = 0
+        for i in prices:
+            lmax = max(i-lmin,lmax)
+            lmin = min(lmin,i)
+        return lmax
+~~~
+
+
+
 ### 122. 买股票的最佳时机 II
 
 * 贪心算法，if (prices[i] > prices[i - 1])   maxprofit += prices[i] - prices[i - 1]
@@ -2743,6 +2759,8 @@ class Solution:
 
 * 如果root就是p或q，则直接返回；用递归查找p和q的位置，如果p和q在同一边，则继续查找，否则返回root
 
+
+
 ~~~python
 class Solution:
     def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -> 'TreeNode':
@@ -2788,6 +2806,23 @@ class Solution:
 ### 257. 二叉树的所有路径
 
 * DFS，深度优先遍历，递归
+
+### 260. 只出现一次的数字 III
+
+~~~python
+class Solution:
+    def singleNumber(self,nums):
+        dic = {}
+        for num in nums:
+            dic[num] = dic.get(num,0)+1
+        ans = []
+        for k in dic.keys():
+            if dic[k]==1:
+                ans.append(k)
+        return ans
+~~~
+
+
 
 ### 263. 丑数
 
