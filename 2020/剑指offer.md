@@ -1191,7 +1191,7 @@ class Solution:
             if col in track:
                 return False
             for k in range(row):
-                if row+col=k+track[k] or row-col=k-track[k]:
+                if row+col==k+track[k] or row-col==k-track[k]:
                     return False
             return True
         
@@ -1226,6 +1226,31 @@ def Solution:
         for i in range(1,len(nums)):
             dp[i] = max(dp[i-1]+nums[i], nums[i])
         	ans = max(ans, dp[i])
+        return ans
+~~~
+
+### 54. 螺旋矩阵
+
+~~~python
+class Solution:
+    def spiralOrder(self,matrix):
+        if not matrix or not matrix[0]:
+            return []
+        m,n = len(matrix),len(matrix[0])
+        v = [[False]*n for i in range(m)]
+        total = m*n
+        ans = [0]*total
+        directions = [[0,1],[1,0],[0,-1],[-1,0]]
+        i,j=0,0
+        index = 0
+        for k in range(total):
+            ans[k] = matrix[i][j]
+            v[i][j] = True
+            next_i,next_j = i+directions[index][0],j+direcions[index][1]
+            if next_i<0 or next_i>=m or next_j<0 or next_j>=n or v[next_i][next_j]:
+                index = (index+1)%4
+            i += directions[index][0]
+            j += directions[index][1]
         return ans
 ~~~
 
@@ -1665,6 +1690,28 @@ class Solution:
 
 * 合并后排序
 * 双指针，从前往后，从后往前
+
+~~~python
+class Soltion:
+    def merge(self,nums1,m,nums2,n):
+        p1 = m-1
+        p2 = n-1
+        p = m+n-1
+        while p1>=0 and p2>=0:
+            if nums1[p1]<nums2[p2]:
+                nums1[p]=nums2[p2]
+                p2 -= 1
+            else:
+                nums1[p] = nums1[p1]
+                p1 -= 1
+            p -= 1
+            
+        nums1[:p2+1] = nums2[:p2+1] 
+~~~
+
+
+
+
 
 ### 92. 反转链表 II
 
@@ -2658,6 +2705,38 @@ def topk(nums,k):
 
 * 用散列表来维护k大小的滑动窗口
 
+### 222. 完全二叉树的节点个数
+
+~~~python
+# 递归
+class Solution:
+    def countNodes(self,root):
+        if not root:
+            return 0
+        return 1+self.countNodes(root.left)+self.countNodes(root.right)
+    
+# 递归
+class Solution:
+    def depth(self,node):
+        d = 0
+        while node.left:
+            node = node.left
+            d += 1
+        return d
+    
+    def countNodes(self,root):
+        if not root:
+            return 0
+        left = self.depth(root.left)
+        right = self.depth(root.right)
+        if left == right:
+            return 2**left-1+self.countNodes(root.right)+1
+        else:
+            return self.countNodes(root.left)+2**right
+~~~
+
+
+
 ### 226. 翻转二叉树
 
 * 递归
@@ -2851,6 +2930,34 @@ class Solution:
                     dp[i] = max(dp[i],dp[j]+1)
 
         return max(dp)
+    
+    	ans = res*[0]
+        t = res
+        for i in range(n-1,-1,-1):
+            if dp[i]==t:
+                ans[t-1] = arr[i]
+                t-=1
+        return ans
+    
+# 二分搜索
+class Solution:
+    def lenthofLIS(self,nums):
+        d = []
+        for num in nums:
+            if not d or num>d[-1]:
+                d.append(num)
+            else:
+                l,r = 0,len(d)-1
+                loc = r
+                while l<=r:
+                    mid = (l+r)//2
+                    if d[mid]>=num:
+                        loc = mid
+                        r = mid-1
+                    else:
+                        l = mid+1
+                d[loc] = num
+        return len(d)
 ~~~
 
 ### 316. 去除重复字母
@@ -3364,7 +3471,7 @@ def LCS(a,b):
     dp = [[0]*(n+1) for i in range(m+1)]
     for i in range(1,m+1):
         for j in range(1,n+1):
-            if a[i-1] == b[i-1]:
+            if a[i-1] == b[j-1]:
                 dp[i][j] = dp[i-1][j-1] + 1
             else:
                 dp[i][j] = max(dp[i-1][j],dp[i][j-1])
