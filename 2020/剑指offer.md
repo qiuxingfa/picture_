@@ -2426,6 +2426,74 @@ class Solution:
         return ans[::-1]
 ~~~
 
+### 146. LRU缓存机制
+
+* 双向链表
+* 对于get操作，如果key不存在，则返回-1，存在则返回节点值
+* 对于put操作，如果不存在，则新建节点，存在则将对应的值更新
+
+~~~python
+class DLinkedNode:
+    def __init__(self,key=0,value=0):
+        self.key = key
+        self.value = value
+        self.prev = None
+        self.next = None
+        
+
+class LRUCacha:
+    
+    def __init__(self,capacity):
+        self.cache = {}
+        self.head = DLinkedNode()
+        self.tail = DLikeedNode()
+        self.head.next = self.tail
+        self.tail.prev = self.head
+        self.capacity = capacity
+        self.size = 0
+        
+    def get(self,key):
+        if key not in self.cache:
+            return -1
+        node = self.cache[key]
+        self.moveToHead(node)
+        return node.value
+        
+    def put(self,key,value):
+        if key not in self.cache:
+            node = DLinkedNode(key,value)
+            self.cache[key] = node
+            self.addToHead(node)
+            self.size += 1
+            if self.size > self.capacity:
+                removed = self.removeTail
+                self.cache.pop(removed.key)
+                self.size -= 1
+        else:
+            node = self.cache[key]
+            node.value = value
+            self.moveToHead(node)
+    def addToHead(self,node):
+        node.prev = self.head
+        node.next = self.head.next
+        self.head.next.prev = node
+        self.head.next = node
+        
+    def removeNode(self,node):
+        node.prev.next = node.next
+        node.next.prev = node.prev
+        
+    def moveToHead(self,node):
+        self.removeNode(node)
+        self.addToHead(node)
+        
+    def removeTail(self):
+        node = self.tail.prev
+        self.removeNode(node)
+        return node
+        
+~~~
+
 
 
 ### 148. 排序链表
@@ -3646,5 +3714,37 @@ def random7():
 for i in range(N-1,-1,-1):
     x = rand(i)
     arr[i],arr[x] = arr[x],arr[i]
+~~~
+
+### 迷宫最短路径
+
+* BFS
+
+~~~python
+def bfs(A,bx,by,ex,ey):
+    m,n = len(A),len(A[0])
+    dp = [[float('inf')]*n for i in range(m)]
+    pre = [[None]*n for i in range(m)] # 记录当前点的上一个点，用于输出路径轨迹
+    
+    dx = [1,0,-1,0]
+    dy = [0,1,0,-1]
+    
+    dp[bx][by] = 0
+    q = [[bx,by]]
+    while q:
+        tx,ty = q.pop(0)
+        find = False
+        for i in range(4):
+            nx,ny = tx+dx[i],ty+dy[i]
+            if 0<=nx<m and 0<=ny<n and A[nx][ny]!='#' and dp[nx][ny]==float('inf'):
+                dp[nx][ny] = dp[tx][ty]+1
+                pre[nx][ny] = [tx,ty]
+                q.append([nx,ny])
+                if nx==ex and ny==ey:
+                    find = True
+                    break
+        if find:
+            break
+    return dp[ex][ey]
 ~~~
 
