@@ -3748,3 +3748,32 @@ def bfs(A,bx,by,ex,ey):
     return dp[ex][ey]
 ~~~
 
+
+
+### 消失的两个数字
+
+~~~python
+def missingTwo(nums):
+    # 原地构建hash，nums[i]的正负号代表i+1是否存在数组中，符号代表存在
+    # 还需要额外的两个变量存放n+1和n+2是否存在
+    n = len(nums)
+    max_flag = False
+    maxMinus1_flag = False
+    
+    for i in range(n):
+        num = abs(nums[i])
+        if num == n+1:
+            maxMinus1_flag = True
+        elif num == n+2:
+            max_flag = True
+        else:
+            nums[num-1] = -abs(nums[num-1])
+    ans = []
+    for i in range(n):
+        if nums[i] > 0:
+            ans.append(i+1)
+    if not max_flag: ans.append(n+2)
+    if not maxMinus1_flag: ans.append(n+1)
+    return ans
+~~~
+
